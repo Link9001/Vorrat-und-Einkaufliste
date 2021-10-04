@@ -1,0 +1,33 @@
+{
+  "$id": "1",
+  "$values": [
+    {
+      "$id": "2",
+      "RecipeName": "test",
+      "Ingredients": {
+        "$id": "3",
+        "$values": [
+          {
+            "$id": "4",
+            "Name": "afd",
+            "Quantity": "afd",
+            "IsInStockList": false
+          }
+        ]
+      },
+      "Oven_Settings": 3,
+      "Duration": "45",
+      "Preparation": "asdfasfsa"
+    },
+    {
+      "$id": "5",
+      "RecipeName": "afd",
+      "Ingredients": {
+        "$ref": "3"
+      },
+      "Oven_Settings": 0,
+      "Duration": "afd",
+      "Preparation": "afd"
+    }
+  ]
+}

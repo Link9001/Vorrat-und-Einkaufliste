@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Visualstudio\Vorrat und Einkaufliste\Vorrat und Einkaufliste\obj\Debug\net5.0-windows\
+C:\Users\Link\source\repos\Vorrat-und-Einkaufliste\Vorrat und Einkaufliste\obj\Debug\net5.0-windows\
 Vorrat_und_Einkaufliste
 none
 false
 TRACE;DEBUG;NET;NET5_0;NETCOREAPP
-C:\Visualstudio\Vorrat und Einkaufliste\Vorrat und Einkaufliste\App.xaml
-11407045341
+C:\Users\Link\source\repos\Vorrat-und-Einkaufliste\Vorrat und Einkaufliste\App.xaml
+2327068711
 
-7-506285085
-194-1919773888
-MainWindow.xaml;
+754839011
+1951082907665
+InputForNewIngredient.xaml;MainWindow.xaml;
 
-False
+True
 

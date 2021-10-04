@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Newtonsoft.Json;
 
-namespace Vorrat_und_Einkaufliste
+namespace DataModel.Foodstuff
 {
-    internal class Foodstuff : INotifyPropertyChanged
+    public class Foodstuff : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private DateTime dateTime;
@@ -63,10 +63,11 @@ namespace Vorrat_und_Einkaufliste
                 OnPropertyChanged();
             }
         }
-        protected void OnPropertyChanged(string name = null)
+        protected void OnPropertyChanged(string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+
         [JsonConstructor]
         public Foodstuff(string Name, DateTime DateTime, string Placement, ObservableCollection<Foodstuff> RelatedFoodList)
         {

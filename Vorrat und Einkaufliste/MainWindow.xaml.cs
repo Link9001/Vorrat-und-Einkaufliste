@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Windows.Input;
+
+using DataModel.Recipes;
+using DataModel.Foodstuff;
+using DataModel;
 
 namespace Vorrat_und_Einkaufliste
 {
@@ -18,45 +17,19 @@ namespace Vorrat_und_Einkaufliste
     /// </summary>
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// Filenames to save the Data
-        /// </summary>
-        private static readonly string[] nameOfFile = { "ShoppingList", "StockList" };
-
-        /// <summary>
-        /// List with every StockItem
-        /// ObservableCollection for notify the Ui when the number of Entrys changes
-        /// </summary>
-        private ObservableCollection<Foodstuff> StockList { get; set; } = new();
-
-        /// <summary>
-        /// List with every ShoppinglistItem
-        /// ObservableCollection for notify the Ui when the number of Entrys changes
-        /// </summary>
-        private static ObservableCollection<Foodstuff> ShoppingList { get; set; } = new();
-
+        private readonly MainDataModel mainDataModel = new();
         /// <summary>
         /// Constructor from the MainWindow
         /// </summary>
         public MainWindow()
         {
-            string path = Path.Combine(Environment.CurrentDirectory, AppDomain.CurrentDomain.FriendlyName, nameOfFile[0] + ".json");
-            if (File.Exists(path))
-            {
-                using StreamReader file = File.OpenText(path);
-                IsoDateTimeConverter converter = new() { DateTimeFormat = "dd/MM/yyyy" };
-                ShoppingList = JsonConvert.DeserializeObject<ObservableCollection<Foodstuff>>(file.ReadToEnd(), converter);
-            }
-            path = Path.Combine(Environment.CurrentDirectory, AppDomain.CurrentDomain.FriendlyName, nameOfFile[1] + ".json");
-            if (File.Exists(path))
-            {
-                using StreamReader file = File.OpenText(path);
-                StockList = JsonConvert.DeserializeObject<ObservableCollection<Foodstuff>>(file.ReadToEnd());
-            }
             InitializeComponent();
-            Ort.ItemsSource = Enum.GetValues(typeof(Placement));
-            Shopping_List.ItemsSource = ShoppingList;
-            Stock_List.ItemsSource = StockList;
+            Placement.ItemsSource = Enum.GetValues(typeof(Placement));
+            Oven_settings.ItemsSource = Enum.GetValues(typeof(Oven_Settings));
+            Shopping_List.ItemsSource = mainDataModel.ShoppingList;
+            Stock_List.ItemsSource = mainDataModel.StockList;
+            Recipe.ItemsSource = mainDataModel.Recipes;
+            Ingredients.ItemsSource = new ObservableCollection<Ingredient>();
         }
 
         /// <summary>
@@ -66,13 +39,11 @@ namespace Vorrat_und_Einkaufliste
         /// <param name="e">Arguments that has been passed by the Object</param>
         private void MoveShoppingListToStock(object sender, RoutedEventArgs e)
         {
-            foreach (Foodstuff foodstuff in ShoppingList)
+            MessageBoxResult result = MessageBox.Show("Willst du das wirklich machen?", "!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (result == MessageBoxResult.Yes)
             {
-                foodstuff.RelatedFoodList = StockList;
-                StockList.Add(foodstuff);
+                mainDataModel.StockList.AddCollectionToThis(mainDataModel.ShoppingList);
             }
-            ShoppingList.Clear();
-            Search(sender, e);
         }
 
         /// <summary>
@@ -87,43 +58,16 @@ namespace Vorrat_und_Einkaufliste
                 MessageBox.Show("Du hast keinen Namen eingegeben.");
                 return;
             }
-            if (Ort.SelectedItem == null)
+            if (Placement.SelectedItem == null)
             {
                 MessageBox.Show("Du hast noch keinen Ort angegeben");
                 return;
             }
-
-            Foodstuff foodstuff = new(NameOfFood.Text, DateTime.Now, Ort.SelectedItem.ToString(), ShoppingList);
-            ShoppingList.Add(foodstuff);
+            Foodstuff newItem = new(NameOfFood.Text, DateTime.MinValue, Placement.SelectedItem.ToString(), mainDataModel.ShoppingList);
+            mainDataModel.ShoppingList.Add(newItem);
             NameOfFood.Text = "";
-            Search(sender, e);
-        }
-
-        /// <summary>
-        /// When the Button "Suche" was pressed
-        /// </summary>
-        /// <param name="sender">The Object with has send the request to this Function / Method</param>
-        /// <param name="e">Arguments that has been passed by the Object</param>
-        private void Search(object sender, RoutedEventArgs e)
-        {
-            string searchValue = NameOfFood.Text != "" ? NameOfFood.Text : SearchValue.Text;
-
-            bool hasSuccessed = DateTime.TryParse(searchValue, out DateTime date);
-            if (searchValue == "")
-            {
-                Stock_List.ItemsSource = StockList;
-                return;
-            }
-            if (hasSuccessed)
-            {
-                string stringDate = $"{date.Day}.{date.Month}.{date.Year}";
-                Stock_List.ItemsSource = new ObservableCollection<Foodstuff>(StockList.Where(x => x.Date.Contains(stringDate)).ToList());
-            }
-            else
-            {
-                Stock_List.ItemsSource = new ObservableCollection<Foodstuff>(StockList.Where(x => x.Name.Contains(searchValue)).ToList());
-            }
-            Stock_List.Items.Refresh();
+            string searchValue = NameOfFood.Text != "" ? NameOfFood.Text : SearchValueFoodStuff.Text;
+            UpdateStockView(Stock_List, searchValue);
         }
 
         /// <summary>
@@ -137,7 +81,8 @@ namespace Vorrat_und_Einkaufliste
             Foodstuff foodstuff = (Foodstuff)button.DataContext;
             ObservableCollection<Foodstuff> targetList = foodstuff.RelatedFoodList;
             targetList.Remove(foodstuff);
-            Search(sender, e);
+            string searchValue = NameOfFood.Text != "" ? NameOfFood.Text : SearchValueFoodStuff.Text;
+            UpdateStockView(Stock_List, searchValue);
         }
 
         /// <summary>
@@ -147,8 +92,7 @@ namespace Vorrat_und_Einkaufliste
         /// <param name="e">Arguments that has been passed by the Object</param>
         private void OnWindowClose(object sender, CancelEventArgs e)
         {
-            WriteDataToFile(nameOfFile[0], ShoppingList);
-            WriteDataToFile(nameOfFile[1], StockList);
+            mainDataModel.Dispose();
         }
 
         /// <summary>
@@ -160,13 +104,11 @@ namespace Vorrat_und_Einkaufliste
         {
             Button button = (Button)sender;
             Foodstuff foodstuff = (Foodstuff)button.DataContext;
-            if (foodstuff.RelatedFoodList != StockList)
-            {
-                StockList.Add(foodstuff);
-                foodstuff.RelatedFoodList.Remove(foodstuff);
-                foodstuff.RelatedFoodList = StockList;
-            }
-            Search(sender, e);
+            mainDataModel.StockList.Add(foodstuff);
+            foodstuff.RelatedFoodList.Remove(foodstuff);
+            foodstuff.RelatedFoodList = mainDataModel.StockList;
+            string searchValue = NameOfFood.Text != "" ? NameOfFood.Text : SearchValueFoodStuff.Text;
+            UpdateStockView(Stock_List, searchValue);
         }
 
         /// <summary>
@@ -174,29 +116,15 @@ namespace Vorrat_und_Einkaufliste
         /// </summary>
         /// <param name="sender">The Object with has send the request to this Function / Method</param>
         /// <param name="e">Arguments that has been passed by the Object</param>
-        private void KeyUpEventHandler(object sender, KeyEventArgs e)
+        private void KeyUpEventHandlerFoodStuff(object sender, KeyEventArgs e)
         {
-            Search(sender, e);
+            string searchValue = NameOfFood.Text != "" ? NameOfFood.Text : SearchValueFoodStuff.Text;
+            UpdateStockView(Stock_List, searchValue);
         }
 
-        /// <summary>
-        /// This Method will write the content to a JSON-File
-        /// </summary>
-        /// <param name="nameOfNewFile">The name of the File</param>
-        /// <param name="content">The Observablecollection that should be saved</param>
-        private static void WriteDataToFile(string nameOfNewFile, ObservableCollection<Foodstuff> content)
+        private void KeyUpEventHandlerRecipe(object sender, KeyEventArgs e)
         {
-            DirectoryInfo directoryInfo = Directory.CreateDirectory(AppDomain.CurrentDomain.FriendlyName);
-            string finalPath = Path.Combine(directoryInfo.FullName, nameOfNewFile + ".json");
-            JsonSerializerOptions options = new()
-            {
-                ReferenceHandler = ReferenceHandler.Preserve,
-                WriteIndented = true
-            };
-            using FileStream file = File.Create(finalPath);
-            {
-                file.Write(System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(content, options));
-            }
+            UpdateRecipe(Recipe, SearchValueRecipe.Text);
         }
 
         /// <summary>
@@ -210,8 +138,194 @@ namespace Vorrat_und_Einkaufliste
 
             if (msResult == MessageBoxResult.Yes)
             {
-                ShoppingList.Clear();
+                mainDataModel.ShoppingList.Clear();
             }
+        }
+
+        private void UpdateRecipe(object sender, RoutedEventArgs e)
+        {
+            if (Recipe.SelectedItem is null)
+            {
+                MessageBox.Show("Du hast hein rezept ausgewählt");
+                return;
+            }
+
+            MessageBoxResult msResult = MessageBox.Show("Willst du das Rezept wirklich ändern?", "!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (msResult is MessageBoxResult.Yes)
+            {
+                Recipe currentRecipe = Recipe.SelectedItem as Recipe;
+                mainDataModel.Recipes.Add(new(
+                    Duration.Text,
+                    Ingredients.ItemsSource as ObservableCollection<Ingredient>,
+                    (Oven_Settings)Oven_settings.SelectedIndex,
+                    Preparation.Text,
+                    RecipeTitle.Text
+                    ));
+                mainDataModel.Recipes.Remove(currentRecipe);
+            }
+            UpdateRecipe(Recipe, SearchValueRecipe.Text);
+        }
+
+        private void AddNewRecipe(object sender, RoutedEventArgs e)
+        {
+            AddNewRecipe();
+            RecipeTitle.Text = "";
+            Oven_settings.SelectedIndex = (int)Oven_Settings.Unbenutzt;
+            Ingredients.ItemsSource = new ObservableCollection<Ingredient>();
+            Duration.Text = "";
+            Preparation.Text = "";
+            UpdateRecipe(Recipe, SearchValueRecipe.Text);
+        }
+
+        private void CopyNewRecipe(object sender, RoutedEventArgs e)
+        {
+            if (Recipe.SelectedItem != null)
+            {
+                mainDataModel.Recipes.Add(Recipe.SelectedItem as Recipe);
+            }
+            UpdateRecipe(Recipe, SearchValueRecipe.Text);
+        }
+
+        private void DeleteRecipe(object sender, RoutedEventArgs e)
+        {
+            if (Recipe.SelectedItem != null)
+            {
+                mainDataModel.Recipes.Remove(Recipe.SelectedItem as Recipe);
+            }
+            UpdateRecipe(Recipe, SearchValueRecipe.Text);
+        }
+
+        private void DeleteIngredient(object sender, RoutedEventArgs e)
+        {
+            ObservableCollection<Ingredient> toUpdate;
+            Button button = sender as Button;
+            if (Recipe.SelectedItem != null)
+            {
+                toUpdate = (Recipe.SelectedItem as Recipe).Ingredients;
+                (Recipe.SelectedItem as Recipe).Ingredients.Remove(button.DataContext as Ingredient);
+            }
+            else
+            {
+                toUpdate = Ingredients.ItemsSource as ObservableCollection<Ingredient>;
+                toUpdate.Remove(button.DataContext as Ingredient);
+            }
+            UpdateIngredients(toUpdate);
+        }
+
+        private void AddNewIngredient(object sender, RoutedEventArgs e)
+        {
+            InputForNewIngredient newIngredient = new(Recipe.SelectedItem as Recipe, Ingredients.ItemsSource as ObservableCollection<Ingredient>);
+            newIngredient.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            newIngredient.Show();
+        }
+
+        private void Recipe_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Recipe selectedRecipe = Recipe.SelectedItem as Recipe;
+
+            if (selectedRecipe is not null)
+            {
+                RecipeTitle.Text = selectedRecipe.RecipeName;
+                Oven_settings.SelectedIndex = selectedRecipe.Oven_Settings;
+                Ingredients.ItemsSource = selectedRecipe.Ingredients;
+                Duration.Text = selectedRecipe.Duration;
+                Preparation.Text = selectedRecipe.Preparation;
+            }
+            else
+            {
+                RecipeTitle.Text = "";
+                Oven_settings.SelectedIndex = (int)Oven_Settings.Unbenutzt;
+                Ingredients.ItemsSource = new ObservableCollection<Ingredient>();
+                Duration.Text = "";
+                Preparation.Text = "";
+            }
+            
+        }
+
+        private void UpdateStockView(ListView listView, string searchValue)
+        {
+            bool hasSuccessed = DateTime.TryParse(searchValue, out DateTime date);
+            if (searchValue == "")
+            {
+                listView.ItemsSource = mainDataModel.StockList;
+                return;
+            }
+            if (hasSuccessed)
+            {
+                string stringDate = $"{date.Day}.{date.Month}.{date.Year}";
+                listView.ItemsSource = new ObservableCollection<Foodstuff>(mainDataModel.StockList.Where(x => x.Date.Contains(stringDate)).ToList());
+            }
+            else
+            {
+                listView.ItemsSource = new ObservableCollection<Foodstuff>(mainDataModel.StockList.Where(x => x.Name.Contains(searchValue)).ToList());
+            }
+            listView.Items.Refresh();
+        }
+
+        private void UpdateRecipe(ListView listView, string searchvalue)
+        {
+            bool tryparse = int.TryParse(searchvalue, out int _);
+            if (searchvalue == "")
+            {
+                listView.ItemsSource = mainDataModel.Recipes;
+            }
+            else if (tryparse)
+            {
+                listView.ItemsSource = new ObservableCollection<Recipe>(mainDataModel.Recipes.Where(x => x.Duration.TryParse() <= searchvalue.TryParse()));
+            }
+            else
+            {
+                listView.ItemsSource = new ObservableCollection<Recipe>(mainDataModel.Recipes.Where(x => x.RecipeName.Contains(searchvalue)));
+            }
+            listView.Items.Refresh();
+        }
+
+
+        private void UpdateIngredients(ObservableCollection<Ingredient> ingredients)
+        {
+            if (Recipe.SelectedItem is not null)
+            {
+                Ingredients.ItemsSource = (Recipe.SelectedItem as Recipe).Ingredients;
+            }
+            else
+            {
+                Ingredients.ItemsSource = ingredients;
+            }
+        }
+
+        private bool AddNewRecipe()
+        {
+            if (string.IsNullOrWhiteSpace(RecipeTitle.Text))
+            {
+                MessageBox.Show("Kein Titel?");
+                return false;
+            }
+            if (Oven_settings.SelectedItem is null)
+            {
+                MessageBox.Show("Braucht es den Ofen?");
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(Duration.Text))
+            {
+                MessageBox.Show("Wie lange braucht du für das Gericht?");
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(Preparation.Text))
+            {
+                MessageBox.Show("Wie geht das?");
+                return false;
+            }
+
+            mainDataModel.Recipes.Add(
+                new(
+                    RecipeTitle.Text,
+                    Ingredients.ItemsSource as ObservableCollection<Ingredient> ?? new ObservableCollection<Ingredient>(),
+                    (Oven_Settings)Enum.Parse(typeof(Oven_Settings), Oven_settings.SelectedItem.ToString()),
+                    Duration.Text,
+                    Preparation.Text
+                    ));
+            return true;
         }
     }
 }

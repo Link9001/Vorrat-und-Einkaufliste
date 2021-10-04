@@ -1,6 +1,6 @@
-﻿namespace Vorrat_und_Einkaufliste
+﻿namespace DataModel.Foodstuff
 {
-    enum Placement
+    public enum Placement
     {
         Keller = 0,
         Tiefkühler = 1,

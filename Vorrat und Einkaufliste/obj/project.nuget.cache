@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "hmr2FR5IAxgCBsUGAgF/t/QxOLYVaWYa4Jjvdxq4z1HuTdWv42+wdYT46TVffrkMkjYYyL4iil+jIDMuriBY+g==",
+  "dgSpecHash": "gKi7BEM/RmSrbldWvLKliJGkrUIvw3vfYiPs6/tTPLeWsejK9j2MzpvceGiTwiHdXAQ6WPVFggrUBYxda2LHwQ==",
   "success": true,
-  "projectFilePath": "C:\\Visualstudio\\Vorrat und Einkaufliste\\Vorrat und Einkaufliste\\Vorrat und Einkaufliste.csproj",
+  "projectFilePath": "C:\\Users\\Link\\source\\repos\\Vorrat-und-Einkaufliste\\Vorrat und Einkaufliste\\Vorrat und Einkaufliste.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\silbersm\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+    "C:\\Users\\Link\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }

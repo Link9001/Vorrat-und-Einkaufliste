@@ -1,0 +1,27 @@
+﻿<Window x:Class="Vorrat_und_Einkaufliste.InputForNewIngredient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vorrat_und_Einkaufliste"
+        mc:Ignorable="d"
+        Title="InputForNewIngredient" Height="200" Width="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <TextBlock FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">Zutat</TextBlock>
+        <TextBox Grid.Column="1" x:Name="ingredentName"></TextBox>
+        <TextBlock Grid.Row="1" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center">Menge</TextBlock>
+        <TextBox Grid.Column="2" Grid.Row="1" x:Name="Quantity"></TextBox>
+        <Button Grid.Row="2" Width="auto" Height="auto" Margin="5,5,5,0" Click="Cancel">Cancel</Button>
+        <Button Grid.Row="2" Grid.Column="1" Width="auto" Height="auto" Margin="5,5,5,0" Click="Confirm">Confirm</Button>
+    </Grid>
+</Window>
