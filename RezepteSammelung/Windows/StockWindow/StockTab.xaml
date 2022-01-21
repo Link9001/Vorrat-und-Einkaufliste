@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="RezepteSammelung.Windows.StockWindow.StockTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <!--#region Row And Column Definition-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="75*"/>
+            <RowDefinition Height="15*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="40*"/>
+        </Grid.ColumnDefinitions>
+        <!--#endregion-->
+
+        <!--#region Searchbar-->
+        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" LastChildFill="True" Margin="0,0,0,10">
+            <TextBlock Text="Suchbegriff:" Margin="0,0,20,0" FontSize="14"/>
+            <TextBox x:Name="SearchValueFoodStuff" KeyUp="SearchBar"/>
+        </DockPanel>
+        <!--#endregion-->
+
+        <!--#region Searchbar and Stocklist-->
+        <ListView x:Name="StockList" Grid.Row="1" Grid.Column="0" Margin="5" Grid.RowSpan="2" ItemsSource="{Binding StockList}" LostFocus="ListViewLostFocus">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="{Binding Name}" Margin="10,0,20,0"/>
+                        <TextBlock Text="{Binding Date}" Margin="0,0,20,0"/>
+                        <TextBlock Text="{Binding Placement}" Margin="0,0,20,0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!--#endregion-->
+
+        <!--#region Shoppinglist-->
+        <ListView x:Name="ShoppingList" Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding ShoppingList}" LostFocus="ListViewLostFocus">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="{Binding Name}" Margin="10,0,20,0"/>
+                        <TextBlock Text="{Binding Date}" Margin="0,0,20,0"/>
+                        <TextBlock Text="{Binding Placement}" Margin="0,0,20,0"/>
+                        <Button Content="Gekauft" Click="Byed" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <!--#endregion-->
+
+        <!--#region Action Buttons-->
+        <Grid Row="2" Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Hinzufügen" Grid.Row="0" Grid.Column="1" Click="NewFoodStuff" FontSize="15" Margin="5" VerticalAlignment="Center"/>
+            <Button Content="Löschen" Grid.Row="0" Grid.Column="0" Click="DeleteFoodStuffElement" Margin="5" FontSize="15" VerticalAlignment="Center"/>
+            <Button Content="Übernahme" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Click="MoveShoppingListToStock" Margin="5" FontSize="15" VerticalAlignment="Center"/>
+        </Grid>
+        <!--#endregion-->
+
+    </Grid>
+</UserControl>
