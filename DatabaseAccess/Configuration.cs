@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
 using DatabaseAccess.AccessData;
@@ -15,9 +12,11 @@ namespace DatabaseAccess
     {
         public static IUnityContainer ConfigureDataAccess(this IUnityContainer container)
         {
-            container.RegisterType<IAccessData<StockFolder>, AccessStockFolderData>();
-            container.RegisterType<IAccessData<RecipeFolder>, AccessRecipeFolderData>();
-            return container;
+            return container
+                .RegisterType<IAccessData<StockFolder>, AccessStockFolderData>()
+                .RegisterType<IAccessData<RecipeFolder>, AccessRecipeFolderData>()
+                .RegisterType<IAccessData<ObservableCollection<Placement>>, AccessPlacementData>()
+                .RegisterType<IAccessData<ObservableCollection<OvenSettings>>, AccessOvenSettingsData>();
         }
     }
 }

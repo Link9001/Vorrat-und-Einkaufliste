@@ -3,7 +3,7 @@ using Database_Models.Interfaces;
 
 namespace Database_Models.DBModels.RecipeModels
 {
-    public class OvenSettings : IDataBaseModel
+    public class OvenSettings : IDataBaseModel, IName
     {
         public static readonly OvenSettings EmptyOvenSettings = new(string.Empty);
         public string Name { get; set; }
@@ -22,6 +22,11 @@ namespace Database_Models.DBModels.RecipeModels
             }
 
             return errorList;
+        }
+
+        public string GetName()
+        {
+            return "Ofeneinstellungen";
         }
     }
 }

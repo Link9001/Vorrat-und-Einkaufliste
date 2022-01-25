@@ -1,8 +1,17 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using Database_Models.DBModels.RecipeModels;
+using Database_Models.DBModels.StockModels;
+using Database_Models.Interfaces;
+using DatabaseAccess.Interface;
 using RezepteSammelung.ViewModel.TabViewModel;
 using RezepteSammelung.ViewModel.Windows;
 using Unity;
+using UtitlityFunctions.InterfaceExtention;
 
 namespace RezepteSammelung.Windows.SettingsWindow
 {
@@ -21,16 +30,24 @@ namespace RezepteSammelung.Windows.SettingsWindow
 
         private void EditOvenSettings(object sender, RoutedEventArgs e)
         {
-            SettingsTabViewModel viewModel = (SettingsTabViewModel)DataContext;
-            var ovenSettingsViewModel = container.Resolve<NewOvenSettingsViewModel>();
-            viewModel.OvenSettingsList = NewOvenSettings.HandelNewOvensettings(ovenSettingsViewModel);
+            var viewModel = (SettingsTabViewModel) DataContext;
+            var ovenSettingsViewModel = container.Resolve<OvenSettingListViewModel>();
+            //var modifyedListFromUser = ModifyListWindow.HandleModifyListFromUser(ovenSettingsViewModel);
+            //if (modifyedListFromUser != null)
+            //{
+            //    viewModel.OvenSettingsList = modifyedListFromUser.CastCollection<IName, OvenSettings>();
+            //}
         }
 
         private void EditPlacement(object sender, RoutedEventArgs e)
         {
-            SettingsTabViewModel viewModel = (SettingsTabViewModel) DataContext;
-            NewPlacementViewModel placementViewModel = container.Resolve<NewPlacementViewModel>();
-            viewModel.Placements = NewPlacement.HandelNewPlacments(placementViewModel);
+            SettingsTabViewModel viewModel = (SettingsTabViewModel)DataContext;
+            var placementViewModel = container.Resolve<PlacementListViewModel>();
+            var modifyedListFromUser = ModifyListWindow.HandleModifyListFromUser(placementViewModel);
+            if (modifyedListFromUser != null)
+            {
+                //viewModel.Placements = modifyedListFromUser.CastCollection<IName, Placement>();
+            }
         }
 
         private void Exit(object sender, RoutedEventArgs e)

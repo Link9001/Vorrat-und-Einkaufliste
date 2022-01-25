@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
 using DatabaseAccess.Interface;
@@ -10,9 +11,9 @@ internal class SettingsTabViewModel
     public ObservableCollection<OvenSettings> OvenSettingsList { get; set; }
     public ObservableCollection<Placement> Placements { get; set; }
 
-    public SettingsTabViewModel(IAccessData<RecipeFolder> recipeFolder, IAccessData<StockFolder> stockFolder)
+    public SettingsTabViewModel(IAccessData<ObservableCollection<OvenSettings>> ovenSettings, IAccessData<ObservableCollection<Placement>> placements)
     {
-        OvenSettingsList = recipeFolder.Data.OvenSettings;
-        Placements = stockFolder.Data.Placements;
+        OvenSettingsList = ovenSettings.Data;
+        Placements = placements.Data;
     }
 }
