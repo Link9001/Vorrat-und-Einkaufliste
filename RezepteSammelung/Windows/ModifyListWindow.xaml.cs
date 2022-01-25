@@ -12,7 +12,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using RezepteSammelung.Interfaces;
 
 namespace RezepteSammelung.Windows
 {
@@ -24,11 +23,6 @@ namespace RezepteSammelung.Windows
         public ModifyListWindow()
         {
             InitializeComponent();
-        }
-
-        public ObservableCollection<T> HandleModifyListFromUser<T>()
-        {
-
         }
     }
 }
