@@ -1,95 +1,88 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Database_Models.Interfaces;
+using RezepteSammelung.Interfaces;
+using RezepteSammelung.ViewModel.Windows;
+using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using Database_Models.Interfaces;
-using RezepteSammelung.ViewModel.Windows;
-using UtitlityFunctions.InterfaceExtention;
 
-namespace RezepteSammelung.Windows
+namespace RezepteSammelung.Windows;
+
+/// <summary>
+/// Interaktionslogik für ModifyListWindow.xaml
+/// </summary>
+public partial class ModifyListWindow : Window
 {
-    /// <summary>
-    /// Interaktionslogik für ModifyListWindow.xaml
-    /// </summary>
-    public partial class ModifyListWindow : Window
+    private static Type _currentType = null!;
+    private ModifyListWindow(object viewModel)
     {
-        private static ObservableCollection<IName>? _toReturn;
-        private static Type _currentType;
-        private ModifyListWindow(object viewModel)
-        {
-            InitializeComponent();
-            DataContext = viewModel;
-        }
+        InitializeComponent();
+        DataContext = viewModel;
+    }
 
-        internal static ObservableCollection<TOFListObejcts> HandleModifyListFromUser<TOFListObejcts>(ListToModifyVieModelBase<TOFListObejcts> viewModel) 
-            where TOFListObejcts: IName
+    internal static void HandleModifyListFromUser<TOfListObejcts>(ListToModifyVieModel<TOfListObejcts> viewModel)
+        where TOfListObejcts : class, IName
+    {
+        var window = new ModifyListWindow(viewModel);
+        _currentType = typeof(TOfListObejcts);
+        window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        if ((bool)window.ShowDialog()!)
         {
-            var window = new ModifyListWindow(viewModel);
-            _toReturn = new(viewModel.ListToModify.Select(x => (IName)x));
-            _currentType = typeof(TOFListObejcts);
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            _ = window.ShowDialog();
-            viewModel.ListToModify.Clear();
-            viewModel.ListToModify.AddCollectionToThis(_toReturn.Select(x => (TOFListObejcts)x));
-            return viewModel.ListToModify;
+            viewModel.ConvertBack();
         }
+    }
 
-        private void Add(object sender, RoutedEventArgs e)
+    private void Add(object sender, RoutedEventArgs e)
+    {
+        var listToModify = (IListToModifyViewModel)DataContext;
+        var newItem = InputNewItem.Text.Trim();
+
+        if (listToModify.ListToModify.All(x => x.Name != newItem))
         {
-            var listToModify = DataContext.GetType().GetProperty("ListToModify");
-            
-            if ((()listToModify.GetValue()).All(x => x.Name != InputNewItem.Text))
+            string sub = InputNewItem.Text.Trim();
+            if (sub[0] >= 'a' && sub[0] <= 'z')
             {
-                string sub = InputNewItem.Text.Trim();
-                if (sub[0] >= 'a' && sub[0] <= 'z')
-                {
-                    string toUpper = sub[0].ToString();
-                    sub = sub[1..];
-                    sub = sub.Insert(0, toUpper.ToUpper());
-                }
-
-                var typOfIName = dataContext.ListToModify.ToArray()[0].GetType();
-                var newIname = Activator.CreateInstance(typOfIName, new object[] { sub });
-
-                if (newIname == null)
-                {
-                    throw new NullReferenceException($"Could not create object from: '{typOfIName.Name}'");
-                }
-
-                dataContext.ListToModify.Add((IName)newIname);
+                string toUpper = sub[0].ToString();
+                sub = sub[1..];
+                sub = sub.Insert(0, toUpper.ToUpper());
             }
-            else
+
+            var newIName = Activator.CreateInstance(_currentType, new object[] { sub });
+
+            if (newIName == null)
             {
-                MessageBox.Show("Das hast du schon mal Eingetragen", "", MessageBoxButton.OK);
+                throw new NullReferenceException($"Could not create object from: '{_currentType.Name}'");
             }
-            InputNewItem.Text = "";
-        }
-        private void EnterAdd(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && InputNewItem.Text != "")
-            {
-                Add(sender, e);
-            }
-        }
-        private void Delete(object sender, RoutedEventArgs e)
-        {
-            var dataConext = (ListToModifyVieModelBase)DataContext;
-            var subject = (IName)List.SelectedItem;
-            dataConext.ListToModify.Remove(subject);
-        }
 
-        private void Save(object sender, RoutedEventArgs e)
-        {
-            _toReturn = (ObservableCollection<IName>)List.ItemsSource;
-            DialogResult = true;
+            ((IListToModifyViewModel)DataContext).ListToModify.Add((IName)newIName);
         }
-        private void Cancel(object sender, RoutedEventArgs e)
+        else
         {
-            DialogResult = false;
+            MessageBox.Show("Das hast du schon mal Eingetragen", "", MessageBoxButton.OK);
         }
+        InputNewItem.Text = "";
+    }
+    private void EnterAdd(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && InputNewItem.Text != "")
+        {
+            Add(sender, e);
+        }
+    }
+    private void Delete(object sender, RoutedEventArgs e)
+    {
+        var dataConext = (IListToModifyViewModel)DataContext;
+        var subject = (IName)List.SelectedItem;
+        dataConext.ListToModify.Remove(subject);
+    }
 
+    private void Save(object sender, RoutedEventArgs e)
+    {
+        DialogResult = true;
+    }
+    private void Cancel(object sender, RoutedEventArgs e)
+    {
+        DialogResult = false;
     }
 }
