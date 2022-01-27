@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RezepteSammelung.ViewModel.TabViewModel;
+﻿using RezepteSammelung.ViewModel.TabViewModel;
 using RezepteSammelung.ViewModel.Windows;
 using Unity;
-using Unity.Lifetime;
 
 namespace RezepteSammelung
 {
@@ -26,7 +20,6 @@ namespace RezepteSammelung
                 .RegisterType<StockTabViewModel>()
                 .RegisterType<NewFoodStuffViewModel>()
                 .RegisterType<NewIngredientViewModel>()
-                .RegisterType<NewOvenSettingsViewModel>()
                 .RegisterType<NewPlacementViewModel>()
                 .RegisterType<MainWindowViewModel>();
         }

@@ -6,7 +6,7 @@ namespace Database_Models
     {
         public static IUnityContainer ConfigureDatabase(this IUnityContainer container)
         {
-            container.RegisterType<Database>(TypeLifetime.PerContainer);
+            container.RegisterType<Database>(TypeLifetime.Singleton);
             return container;
         }
     }

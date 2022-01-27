@@ -1,19 +1,19 @@
-﻿namespace UtitlityFunctions.InterfaceExtention
+﻿namespace UtitlityFunctions.InterfaceExtention;
+
+public static class ICollectionExtention
 {
-    public static class ICollectionExtention
+
+    public static bool IsEmpty<T>(this ICollection<T> collection)
     {
+        return collection.Count == 0;
+    }
 
-        public static bool IsEmpty<T>(this ICollection<T> collection)
+    public static void AddCollectionToThis<TFrom, TTo>(this ICollection<TFrom> collection, IEnumerable<TTo> collectionToAdd)
+        where TTo : TFrom
+    {
+        foreach (TTo item in collectionToAdd)
         {
-            return collection.Count == 0;
-        }
-
-        public static void AddCollectionToThis<T>(this ICollection<T> collection, IEnumerable<T> collectionToAdd)
-        {
-            foreach (T item in collectionToAdd)
-            {
-                collection.Add(item);
-            }
+            collection.Add(item);
         }
     }
 }

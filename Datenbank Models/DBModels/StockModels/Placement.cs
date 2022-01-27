@@ -3,7 +3,7 @@ using Database_Models.Interfaces;
 
 namespace Database_Models.DBModels.StockModels;
 
-internal class Placement : IDataBaseModel
+internal class Placement : IDataBaseModel, IName
 {
     public static readonly Placement EmptyPlacement = new(string.Empty);
     public string Name { get; set; }
@@ -22,5 +22,10 @@ internal class Placement : IDataBaseModel
         }
 
         return errorList;
+    }
+
+    public string GetName()
+    {
+        return "Lagerorte";
     }
 }
