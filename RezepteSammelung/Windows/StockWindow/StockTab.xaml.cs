@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using Database_Models.DBModels.StockModels;
+using RezepteSammelung.ViewModel.TabViewModel;
+using RezepteSammelung.ViewModel.Windows;
+using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Database_Models.DBModels.StockModels;
-using RezepteSammelung.ViewModel.TabViewModel;
-using RezepteSammelung.ViewModel.Windows;
 using Unity;
 using UtitlityFunctions.InterfaceExtention;
 
@@ -12,11 +13,11 @@ namespace RezepteSammelung.Windows.StockWindow
 {
     public partial class StockTab : UserControl
     {
-        private IUnityContainer container;
-        private ListView? lastFocusedListView;
+        private readonly IUnityContainer _container;
+        private ListView? _lastFocusedListView;
         internal StockTab(IUnityContainer container, StockTabViewModel viewModel)
         {
-            this.container = container;
+            this._container = container;
             InitializeComponent();
             DataContext = viewModel;
         }
@@ -41,15 +42,27 @@ namespace RezepteSammelung.Windows.StockWindow
                 return;
             }
 
-            viewModel.ShoppingList.AddCollectionToThis(viewModel.shoppingList.Where(x => x.Name.Contains(searchValue)));
-            viewModel.StockList.AddCollectionToThis(viewModel.stockList.Where(x => x.Name.Contains(searchValue)));
+            if (viewModel.Placements.Any(x => x.Name.Contains(searchValue)))
+            {
+                viewModel.ShoppingList.AddCollectionToThis(viewModel.shoppingList.Where(x => x.Placement.Name.Contains(searchValue)));
+                viewModel.StockList.AddCollectionToThis(viewModel.stockList.Where(x => x.Placement.Name.Contains(searchValue)));
+            }
+
+            if (DateTime.TryParse(searchValue, out DateTime result))
+            {
+                viewModel.ShoppingList.AddCollectionToThis(viewModel.shoppingList.Where(x => DateTime.Parse(x.Date) >= result));
+                viewModel.StockList.AddCollectionToThis(viewModel.stockList.Where(x => DateTime.Parse(x.Date) >= result));
+            }
+
+            viewModel.ShoppingList.AddCollectionToThis(viewModel.shoppingList.Where(x => x.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)));
+            viewModel.StockList.AddCollectionToThis(viewModel.stockList.Where(x => x.Name.Contains(searchValue, StringComparison.OrdinalIgnoreCase)));
         }
 
         private void Byed(object sender, RoutedEventArgs e)
         {
             StockTabViewModel viewModel = (StockTabViewModel)DataContext;
             Button btn = (Button)sender;
-            Foodstuff selectedFoodstuff = (Foodstuff)btn.DataContext; 
+            Foodstuff selectedFoodstuff = (Foodstuff)btn.DataContext;
             viewModel.shoppingList.Remove(selectedFoodstuff);
             viewModel.stockList.Add(selectedFoodstuff);
             Search();
@@ -57,28 +70,32 @@ namespace RezepteSammelung.Windows.StockWindow
 
         private void NewFoodStuff(object sender, RoutedEventArgs e)
         {
-            var viewModel = (StockTabViewModel) DataContext;
-            var foodStuffViewModel = container.Resolve<NewFoodStuffViewModel>();
-            Foodstuff newFoodstuff = Windows.NewFoodStuff.HandelNewFoodstuff(foodStuffViewModel);
-            if (newFoodstuff == Foodstuff.EmptyFoodstuff)
+            var viewModel = (StockTabViewModel)DataContext;
+            var foodStuffViewModel = _container.Resolve<NewFoodStuffViewModel>();
+            while (true)
             {
-                return;
+                Foodstuff? newFoodstuffs = NewItem.HandelNewItem<Foodstuff>(foodStuffViewModel);
+                if (newFoodstuffs == null)
+                {
+                    break;
+                }
+
+                viewModel.shoppingList.Add(newFoodstuffs);
+                Search();
             }
-            viewModel.shoppingList.Add(newFoodstuff);
-            Search();
         }
 
         private void DeleteFoodStuffElement(object sender, RoutedEventArgs e)
         {
-            StockTabViewModel viewModel = (StockTabViewModel) DataContext;
-            if (lastFocusedListView is not null && lastFocusedListView.Name == "StockList")
+            StockTabViewModel viewModel = (StockTabViewModel)DataContext;
+            if (_lastFocusedListView is not null && _lastFocusedListView.Name == "StockList")
             {
                 Foodstuff toDeleteFoodstuff = (Foodstuff)StockList.SelectedItem;
                 viewModel.stockList.Remove(toDeleteFoodstuff);
             }
             else
             {
-                Foodstuff toDeleteFoodstuff = (Foodstuff) ShoppingList.SelectedItem;
+                Foodstuff toDeleteFoodstuff = (Foodstuff)ShoppingList.SelectedItem;
                 viewModel.shoppingList.Remove(toDeleteFoodstuff);
             }
             Search();
@@ -90,7 +107,7 @@ namespace RezepteSammelung.Windows.StockWindow
             {
                 return;
             }
-            StockTabViewModel viewModel = (StockTabViewModel) DataContext;
+            StockTabViewModel viewModel = (StockTabViewModel)DataContext;
             viewModel.stockList.AddCollectionToThis(viewModel.shoppingList);
             viewModel.shoppingList.Clear();
             Search();
@@ -99,7 +116,7 @@ namespace RezepteSammelung.Windows.StockWindow
 
         private void ListViewLostFocus(object sender, RoutedEventArgs e)
         {
-            lastFocusedListView = (ListView) sender;
+            _lastFocusedListView = (ListView)sender;
         }
     }
 }

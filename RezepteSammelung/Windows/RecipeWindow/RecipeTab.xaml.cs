@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Database_Models.DBModels.RecipeModels;
+using Database_Models.DBModels.StockModels;
+using DatabaseAccess.Interface;
 using RezepteSammelung.ViewModel.TabViewModel;
 using RezepteSammelung.ViewModel.Windows;
 using Unity;
@@ -26,7 +28,7 @@ public partial class RecipeTab : UserControl
 
     private void UpdateRecipe(object sender, RoutedEventArgs e)
     {
-        RecipeTabViewModel viewModel = (RecipeTabViewModel) DataContext;
+        RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
         if (Recipes.SelectedItem is null)
         {
             return;
@@ -52,7 +54,7 @@ public partial class RecipeTab : UserControl
 
     private void Recipe_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        RecipeTabViewModel viewModel = (RecipeTabViewModel) DataContext;
+        RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
         Recipe selectedRecipe = (Recipe)Recipes.SelectedItem;
 
         if (selectedRecipe is not null)
@@ -71,21 +73,31 @@ public partial class RecipeTab : UserControl
 
     private void AddNewIngredient(object sender, RoutedEventArgs e)
     {
+        var stockList = container.Resolve<IAccessData<StockFolder>>();
         var ingredientViewModel = container.Resolve<NewIngredientViewModel>();
-        Ingredient ingredientToAdd = NewIngredients.HandelNewIngredient(ingredientViewModel);
-        if (ingredientToAdd == Ingredient.EmptyIngredient)
+        while (true)
         {
-            return;
-        }
+            Ingredient? ingredientToAdd = NewItem.HandelNewItem<Ingredient>(ingredientViewModel);
 
-        if (Recipes.SelectedItem is null)
-        {
-            ((ObservableCollection<Ingredient>)Ingredients.ItemsSource).Add(ingredientToAdd);
-        }
-        else
-        {
-            Recipe selectedRecipe = (Recipe) Recipes.SelectedItem;
-            selectedRecipe.Ingredients.Add(ingredientToAdd);
+            if (ingredientToAdd == null)
+            {
+                break;
+            }
+
+            ingredientToAdd.Status = stockList.Data.StockList.Any(x => x.Name == ingredientToAdd.Name)
+                ? ColorCollection.IsAvaiable
+                : ColorCollection.IsNotAvaiable;
+
+
+            if (Recipes.SelectedItem is null)
+            {
+                ((ObservableCollection<Ingredient>) Ingredients.ItemsSource).Add(ingredientToAdd);
+            }
+            else
+            {
+                Recipe selectedRecipe = (Recipe) Recipes.SelectedItem;
+                selectedRecipe.Ingredients.Add(ingredientToAdd);
+            }
         }
     }
 
@@ -95,7 +107,7 @@ public partial class RecipeTab : UserControl
         Ingredient todelete = (Ingredient)Ingredients.SelectedItem;
         if (Recipes.SelectedItem is null)
         {
-            viewmodelIngredients = (ObservableCollection<Ingredient>) Ingredients.ItemsSource;
+            viewmodelIngredients = (ObservableCollection<Ingredient>)Ingredients.ItemsSource;
         }
         else
         {
@@ -117,8 +129,8 @@ public partial class RecipeTab : UserControl
         }
 
         Recipe newRecipe = new(
-            (ObservableCollection<Ingredient>) Ingredients.ItemsSource,
-            (OvenSettings) OvenSettings.SelectionBoxItem,
+            (ObservableCollection<Ingredient>)Ingredients.ItemsSource,
+            (OvenSettings)OvenSettings.SelectionBoxItem,
             RecipeTitle.Text.Trim(),
             Duration.Text.Trim(),
             Preparation.Text.Trim()
@@ -134,7 +146,7 @@ public partial class RecipeTab : UserControl
 
     private void CopyNewRecipe(object sender, RoutedEventArgs e)
     {
-        RecipeTabViewModel viewModel = (RecipeTabViewModel) DataContext;
+        RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
         if (Recipes.SelectedItem is not null)
         {
             Recipe toCopyRecipe = (Recipe)Recipes.SelectedItem;
@@ -145,7 +157,7 @@ public partial class RecipeTab : UserControl
 
     private void DeleteRecipe(object sender, RoutedEventArgs e)
     {
-        RecipeTabViewModel viewModel = (RecipeTabViewModel) DataContext;
+        RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
         Recipe toDeleteRecipe = (Recipe)Recipes.SelectedItem;
 
         if (MessageBox.Show($"Willst du das Rezept {toDeleteRecipe.RecipeName} wirklich löschen?", "?", MessageBoxButton.YesNo, MessageBoxImage.Warning) is MessageBoxResult.Yes)
@@ -162,7 +174,7 @@ public partial class RecipeTab : UserControl
 
     private void Search()
     {
-        RecipeTabViewModel viewModel = (RecipeTabViewModel) DataContext;
+        RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
         string searchValue = SearchValueRecipe.Text;
 
         viewModel.Recipes.Clear();
@@ -195,7 +207,7 @@ public partial class RecipeTab : UserControl
     private List<string> ValidateRecipe()
     {
         List<string> errorList = new();
-        if (OvenSettings.SelectionBoxItem is null)
+        if (OvenSettings.SelectionBoxItem is null || OvenSettings.SelectionBoxItem as string == string.Empty)
         {
             errorList.Add("Du musst noch eine Ofeneinstellung auswählen. Falls du keinen Ofen brauchst dann wähle einfach unbenutzt.");
         }

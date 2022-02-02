@@ -8,10 +8,8 @@ internal class NewFoodStuffViewModel
 {
     public NewFoodStuffViewModel(IAccessData<StockFolder> stockFolder)
     {
-        AllPlacements = stockFolder.Data.Placements;
+        Placements = stockFolder.Data.Placements;
     }
 
-    public ObservableCollection<Placement> AllPlacements { get; set; }
-    public string? Name { get; set; }
-    public int? Placement { get; set; }
+    public ObservableCollection<Placement> Placements { get; set; }
 }

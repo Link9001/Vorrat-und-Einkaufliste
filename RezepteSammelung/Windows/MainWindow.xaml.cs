@@ -1,25 +1,25 @@
-﻿using System.Windows;
-using RezepteSammelung.ViewModel.Windows;
-using RezepteSammelung.Windows.RecipeWindow;
+﻿using RezepteSammelung.Windows.RecipeWindow;
 using RezepteSammelung.Windows.SettingsWindow;
 using RezepteSammelung.Windows.StockWindow;
+using System.Windows;
+using RezepteSammelung.ViewModel.Windows;
 using Unity;
 
-namespace RezepteSammelung.Windows
+namespace RezepteSammelung.Windows;
+
+/// <summary>
+/// Interaction logic for MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    private readonly IUnityContainer container;
+    internal MainWindow(IUnityContainer container)
     {
-        private IUnityContainer container;
-        internal MainWindow(IUnityContainer container, MainWindowViewModel viewModel)
-        {
-            this.container = container;
-            InitializeComponent();
-            stock.Content = container.Resolve<StockTab>();
-            recipe.Content = container.Resolve<RecipeTab>();
-            settins.Content = container.Resolve<SettingsTab>();
-        }
+        this.container = container;
+        InitializeComponent();
+        Title = "Haushalt";
+        stock.Content = container.Resolve<StockTab>();
+        recipe.Content = container.Resolve<RecipeTab>();
+        settins.Content = container.Resolve<SettingsTab>();
     }
 }

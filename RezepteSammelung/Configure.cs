@@ -19,9 +19,7 @@ namespace RezepteSammelung
                 .RegisterType<SettingsTabViewModel>()
                 .RegisterType<StockTabViewModel>()
                 .RegisterType<NewFoodStuffViewModel>()
-                .RegisterType<NewIngredientViewModel>()
-                .RegisterType<NewPlacementViewModel>()
-                .RegisterType<MainWindowViewModel>();
+                .RegisterType<NewIngredientViewModel>();
         }
     }
 }
