@@ -18,10 +18,11 @@ namespace RezepteSammelung.Windows;
 public partial class ModifyListWindow : Window
 {
     private static Type _currentType = null!;
-    private ModifyListWindow(object viewModel)
+    private ModifyListWindow(IListToModifyViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;
+        Title = viewModel.ListToModify[0].GetName();
     }
 
     internal static void HandleModifyListFromUser<TOfListObejcts>(ListToModifyVieModel<TOfListObejcts> viewModel)
