@@ -1,8 +1,7 @@
-﻿namespace Database_Models.Interfaces
+﻿namespace Database_Models.Interfaces;
+
+internal interface IName
 {
-    internal interface IName
-    {
-        string Name { get; }
-        string GetName();
-    }
+    string Name { get; }
+    string GetName();
 }

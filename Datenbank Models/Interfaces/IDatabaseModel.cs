@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Database_Models.Interfaces
+namespace Database_Models.Interfaces;
+
+internal interface IDataBaseModel
 {
-    internal interface IDataBaseModel
-    {
-        List<string> Validate();
-    }
+    List<string> Validate();
 }

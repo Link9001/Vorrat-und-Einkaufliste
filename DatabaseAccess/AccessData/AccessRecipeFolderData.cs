@@ -1,7 +1,7 @@
-﻿using System;
-using Database_Models;
-using DatabaseAccess.Interface;
+﻿using Database_Models;
 using Database_Models.DBModels.RecipeModels;
+using DatabaseAccess.Interface;
+using System;
 
 namespace DatabaseAccess.AccessData;
 
@@ -11,12 +11,9 @@ internal class AccessRecipeFolderData : IAccessData<RecipeFolder>
 
     public AccessRecipeFolderData(Database db)
     {
-        this._recipeFolder = db.RecipeFolder;
+        _recipeFolder = db.RecipeFolder;
     }
 
-    public RecipeFolder Data
-    {
-        get => this.Filter != null ? Filter.Invoke(this._recipeFolder) : this._recipeFolder;
-    }
+    public RecipeFolder Data => Filter != null ? Filter.Invoke(_recipeFolder) : _recipeFolder;
     public Func<RecipeFolder, RecipeFolder>? Filter { get; set; }
 }

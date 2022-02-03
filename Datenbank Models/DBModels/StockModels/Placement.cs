@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Database_Models.Interfaces;
+﻿using Database_Models.Interfaces;
+using System.Collections.Generic;
 
 namespace Database_Models.DBModels.StockModels;
 

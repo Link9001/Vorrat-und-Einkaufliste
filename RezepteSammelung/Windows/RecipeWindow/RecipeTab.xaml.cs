@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using Database_Models.DBModels.RecipeModels;
+﻿using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
 using DatabaseAccess.Interface;
 using RezepteSammelung.ViewModel.TabViewModel;
 using RezepteSammelung.ViewModel.Windows;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using Unity;
 using UtitlityFunctions.InterfaceExtention;
 
@@ -17,10 +16,10 @@ namespace RezepteSammelung.Windows.RecipeWindow;
 
 public partial class RecipeTab : UserControl
 {
-    private IUnityContainer container;
+    private readonly IUnityContainer _container;
     internal RecipeTab(IUnityContainer container, RecipeTabViewModel viewModel)
     {
-        this.container = container;
+        this._container = container;
         DataContext = viewModel;
         InitializeComponent();
         Ingredients.ItemsSource = new ObservableCollection<Ingredient>();
@@ -28,7 +27,6 @@ public partial class RecipeTab : UserControl
 
     private void UpdateRecipe(object sender, RoutedEventArgs e)
     {
-        RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
         if (Recipes.SelectedItem is null)
         {
             return;
@@ -39,17 +37,14 @@ public partial class RecipeTab : UserControl
         if (msResult is MessageBoxResult.Yes)
         {
             Recipe currentRecipe = (Recipe)Recipes.SelectedItem;
-            int indexFromOld = viewModel.Recipes.IndexOf(currentRecipe);
-            viewModel.Recipes.Remove(currentRecipe);
-            viewModel.Recipes.Insert(indexFromOld, new(
-                (ObservableCollection<Ingredient>)Ingredients.ItemsSource,
-                (OvenSettings)OvenSettings.SelectionBoxItem,
-                RecipeTitle.Text,
-                Duration.Text,
-                Preparation.Text
-                ));
+            currentRecipe.Duration = Duration.Text.Trim();
+            currentRecipe.Ingredients = (ObservableCollection<Ingredient>) Ingredients.ItemsSource;
+            currentRecipe.OvenSettings = (OvenSettings) OvenSettings.SelectionBoxItem;
+            currentRecipe.Preparation = Preparation.Text.Trim();
+            currentRecipe.RecipeName = RecipeTitle.Text.Trim();
+
+            Recipes.SelectedItem = currentRecipe;
         }
-        Search();
     }
 
     private void Recipe_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -57,24 +52,26 @@ public partial class RecipeTab : UserControl
         RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
         Recipe selectedRecipe = (Recipe)Recipes.SelectedItem;
 
-        if (selectedRecipe is not null)
+        if (selectedRecipe != null)
         {
             RecipeTitle.Text = selectedRecipe.RecipeName;
-            OvenSettings.SelectedIndex = viewModel.OvenSettingsList.IndexOf(selectedRecipe.OvenSettings);
+            OvenSettings.SelectedIndex =
+                viewModel.OvenSettingsList.IndexOf(
+                    viewModel.OvenSettingsList.First(x => x.Name == selectedRecipe.OvenSettings.Name));
             Ingredients.ItemsSource = selectedRecipe.Ingredients;
             Duration.Text = selectedRecipe.Duration;
             Preparation.Text = selectedRecipe.Preparation;
         }
         else
         {
-            ResetRecipeUI(viewModel);
+            ResetRecipeUi();
         }
     }
 
     private void AddNewIngredient(object sender, RoutedEventArgs e)
     {
-        var stockList = container.Resolve<IAccessData<StockFolder>>();
-        var ingredientViewModel = container.Resolve<NewIngredientViewModel>();
+        var stockList = _container.Resolve<IAccessData<StockFolder>>();
+        var ingredientViewModel = _container.Resolve<NewIngredientViewModel>();
         while (true)
         {
             Ingredient? ingredientToAdd = NewItem.HandelNewItem<Ingredient>(ingredientViewModel);
@@ -91,11 +88,11 @@ public partial class RecipeTab : UserControl
 
             if (Recipes.SelectedItem is null)
             {
-                ((ObservableCollection<Ingredient>) Ingredients.ItemsSource).Add(ingredientToAdd);
+                ((ObservableCollection<Ingredient>)Ingredients.ItemsSource).Add(ingredientToAdd);
             }
             else
             {
-                Recipe selectedRecipe = (Recipe) Recipes.SelectedItem;
+                Recipe selectedRecipe = (Recipe)Recipes.SelectedItem;
                 selectedRecipe.Ingredients.Add(ingredientToAdd);
             }
         }
@@ -188,17 +185,17 @@ public partial class RecipeTab : UserControl
         viewModel.Recipes.AddCollectionToThis(viewModel.allRecipes.Where(x => x.RecipeName.Contains(searchValue)));
     }
 
-    private void ClearUI(object sender, RoutedEventArgs e)
+    private void ClearUi(object sender, RoutedEventArgs e)
     {
-        RecipeTabViewModel viewModel = (RecipeTabViewModel)DataContext;
-        ResetRecipeUI(viewModel);
+        ResetRecipeUi();
     }
 
-    private void ResetRecipeUI(RecipeTabViewModel viewModel)
+    private void ResetRecipeUi()
     {
+        var ovenSettings = _container.Resolve<IAccessData<ObservableCollection<OvenSettings>>>();
         Recipes.SelectedIndex = -1;
         RecipeTitle.Text = "";
-        OvenSettings.SelectedIndex = viewModel.OvenSettingsList.IndexOf(viewModel.OvenSettingsList.First(x => x.Name == "Unbenutzt"));
+        OvenSettings.SelectedIndex = ovenSettings.Data.IndexOf(ovenSettings.Data.First(x => x.Name == "Unbenutzt"));
         Ingredients.ItemsSource = new ObservableCollection<Ingredient>();
         Duration.Text = "";
         Preparation.Text = "";

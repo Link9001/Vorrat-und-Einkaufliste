@@ -1,46 +1,46 @@
-﻿using System;
+﻿using Database_Models.Converters;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using Database_Models.Converters;
 using UtitlityFunctions.InterfaceExtention;
 
 namespace Database_Models.DBModels.StockModels;
 internal class StockFolder : IDisposable
 {
-    private DirectoryInfo saveDirectoryInfo;
-    private ObservableCollection<Foodstuff> stockList = new();
-    private ObservableCollection<Foodstuff> shoppingList = new();
-    private ObservableCollection<Placement> placements = new();
+    private readonly DirectoryInfo _saveDirectoryInfo;
+    private readonly ObservableCollection<Foodstuff> _stockList = new();
+    private ObservableCollection<Foodstuff> _shoppingList = new();
+    private ObservableCollection<Placement> _placements = new();
 
     public ObservableCollection<Foodstuff> StockList
     {
-        get => stockList;
-        set => shoppingList = value;
+        get => _stockList;
+        set => _shoppingList = value;
     }
 
     public ObservableCollection<Foodstuff> ShoppingList
     {
-        get => shoppingList;
-        set => shoppingList = value;
+        get => _shoppingList;
+        set => _shoppingList = value;
     }
 
     public ObservableCollection<Placement> Placements
     {
-        get => placements;
-        set => placements = value;
+        get => _placements;
+        set => _placements = value;
     }
 
     public StockFolder(string rootFolderPath)
     {
-        saveDirectoryInfo = new(Path.Combine(rootFolderPath, "Stock"));
-        if (!saveDirectoryInfo.Exists)
+        _saveDirectoryInfo = new(Path.Combine(rootFolderPath, "Stock"));
+        if (!_saveDirectoryInfo.Exists)
         {
-            Directory.CreateDirectory(saveDirectoryInfo.FullName);
+            Directory.CreateDirectory(_saveDirectoryInfo.FullName);
         }
 
-        JsonConverter.Deserialize(ref stockList, nameof(stockList), saveDirectoryInfo.FullName);
-        JsonConverter.Deserialize(ref shoppingList, nameof(shoppingList), saveDirectoryInfo.FullName);
-        JsonConverter.Deserialize(ref placements, nameof(placements), saveDirectoryInfo.FullName);
+        JsonConverter.Deserialize(ref _stockList, nameof(_stockList), _saveDirectoryInfo.FullName);
+        JsonConverter.Deserialize(ref _shoppingList, nameof(_shoppingList), _saveDirectoryInfo.FullName);
+        JsonConverter.Deserialize(ref _placements, nameof(_placements), _saveDirectoryInfo.FullName);
 
         if (Placements.IsEmpty())
         {
@@ -53,17 +53,22 @@ internal class StockFolder : IDisposable
 
     public void Dispose()
     {
-        JsonConverter.Serialize(stockList, nameof(stockList), saveDirectoryInfo.FullName);
-        JsonConverter.Serialize(shoppingList, nameof(shoppingList), saveDirectoryInfo.FullName);
-        JsonConverter.Serialize(placements, nameof(placements), saveDirectoryInfo.FullName);
+        JsonConverter.Serialize(_stockList, nameof(_stockList), _saveDirectoryInfo.FullName);
+        JsonConverter.Serialize(_shoppingList, nameof(_shoppingList), _saveDirectoryInfo.FullName);
+        JsonConverter.Serialize(_placements, nameof(_placements), _saveDirectoryInfo.FullName);
     }
 }
 
+// ReSharper disable once UnusedMember.Global
 internal enum DefaultPlacement
 {
     Keller = 0,
+    // ReSharper disable once UnusedMember.Global
     Tiefkühler = 1,
+    // ReSharper disable once UnusedMember.Global
     Reduit = 2,
+    // ReSharper disable once UnusedMember.Global
     Kühlschrank = 3,
+    // ReSharper disable once UnusedMember.Global
     Küche = 4
 }

@@ -29,10 +29,17 @@
         <ListView x:Name="StockList" Grid.Row="1" Grid.Column="0" Margin="5" Grid.RowSpan="2" ItemsSource="{Binding StockList}" LostFocus="ListViewLostFocus">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                        <TextBlock Text="{Binding Name}" Margin="10,0,20,0"/>
-                        <TextBlock Text="{Binding Date}" Margin="0,0,20,0"/>
-                        <TextBlock Text="{Binding Placement.Name}" Margin="0,0,20,0"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" Margin="10,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Date}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Placement.Name}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Quantity}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Quantitiespesification}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <StackPanel Margin="0,0,20,0">
+                            <Button VerticalAlignment="Top" FontFamily="Marlett" Content="5" Click="CountUp"/>
+                            <Button VerticalAlignment="Bottom" FontFamily="Marlett" Content="6" Click="CountDown"/>
+                        </StackPanel>
+                        <Button Content="Bearbeiten" HorizontalAlignment="Right" Click="EditFoodstuff" VerticalAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -43,11 +50,18 @@
         <ListView x:Name="ShoppingList" Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding ShoppingList}" LostFocus="ListViewLostFocus">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                        <TextBlock Text="{Binding Name}" Margin="10,0,20,0"/>
-                        <TextBlock Text="{Binding Date}" Margin="0,0,20,0"/>
-                        <TextBlock Text="{Binding Placement.Name}" Margin="0,0,20,0"/>
-                        <Button Content="Gekauft" Click="Byed" />
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                        <TextBlock Text="{Binding Name}" Margin="10,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Date}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Placement.Name}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Quantity}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Quantitiespesification}" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <StackPanel Margin="0,0,20,0">
+                            <Button VerticalAlignment="Top" FontFamily="Marlett" Content="5" Click="CountUp"/>
+                            <Button VerticalAlignment="Bottom" FontFamily="Marlett" Content="6" Click="CountDown"/>
+                        </StackPanel>
+                        <Button Content="Gekauft" Click="Byed" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <Button Content="Bearbeiten" HorizontalAlignment="Right" Click="EditFoodstuff" VerticalAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

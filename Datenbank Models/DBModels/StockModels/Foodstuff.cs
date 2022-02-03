@@ -2,12 +2,15 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Windows.Media;
 using UtitlityFunctions.Atributte;
 
 namespace Database_Models.DBModels.StockModels;
-internal class Foodstuff : IDataBaseModel
+internal class Foodstuff : ListViewItem, IDataBaseModel
 {
-    public static readonly Foodstuff EmptyFoodstuff = new(string.Empty, string.Empty, new(string.Empty));
+    public static readonly Foodstuff EmptyFoodstuff = new(new Placement(string.Empty), string.Empty, string.Empty, 0, string.Empty);
+
+    private double _quantity;
 
     [IgnoreForCreationOfObject(true)]
     public string Date { get; set; }
@@ -15,20 +18,40 @@ internal class Foodstuff : IDataBaseModel
     public string Name { get; set; }
     public Placement Placement { get; set; }
 
+    public double Quantity
+    {
+        get => _quantity;
+        set
+        {
+            _quantity = value;
+            OnPropertyChanged(nameof(_quantity));
+        }
+    }
+
+    public string Quantitiespesification { get; set; }
+
     [JsonConstructor]
-    public Foodstuff(string name, string dateTime, Placement placement)
+    public Foodstuff(Placement placement, string name = "", string dateTime = "", double quantity = 0, string quantitiespesification = "")
     {
         Date = dateTime;
         Name = name;
         Placement = placement;
+        Quantity = quantity;
+        Quantitiespesification = quantitiespesification;
+
+        Status = new SolidColorBrush(Colors.Black);
     }
 
-    public Foodstuff(string name, Placement placement)
+    public Foodstuff(Placement placement, string name, double quantity, string quantitiespesification)
     {
         var dateTime = DateTime.Now;
         Date = $"{dateTime.Day}.{dateTime.Month}.{dateTime.Year}";
         Name = name;
         Placement = placement;
+        Quantity = quantity;
+        Quantitiespesification = quantitiespesification;
+
+        Status = new SolidColorBrush(Colors.Black);
     }
 
     public List<string> Validate()

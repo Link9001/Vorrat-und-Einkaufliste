@@ -5,7 +5,7 @@ namespace Database_Models.DBModels.RecipeModels;
 
 internal class Ingredient : ListViewItem, IDataBaseModel
 {
-    public static readonly Ingredient EmptyIngredient = new("", "");
+    public static readonly Ingredient EmptyIngredient = new(string.Empty, string.Empty);
     public string Name { get; set; }
     public string Quantity { get; set; }
 
@@ -17,7 +17,7 @@ internal class Ingredient : ListViewItem, IDataBaseModel
 
     public List<string> Validate()
     {
-        List<string> errorList = new();
+        var errorList = new List<string>();
         if (string.IsNullOrEmpty(Name))
         {
             errorList.Add("Was willst du zum kochen benutzten? Nichts. Was kann man den damit machen.");

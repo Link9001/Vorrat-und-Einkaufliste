@@ -94,6 +94,18 @@ public partial class NewItem : Window
                     throw new NullReferenceException($"Could not find textbox with name: '{property.Name}'.");
                 }
 
+                if (property.PropertyType.IsNumber())
+                {
+                    if (double.TryParse(textBox.Text.Trim(), out var result))
+                    {
+                        listOfParameters.Add(result);
+                        continue;
+                    }
+
+                    MessageBox.Show($"Das Feld: '{property.Name}' sollte nur eine Zahl beinhalten.", "", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 listOfParameters.Add(textBox.Text.Trim());
             }
         }
