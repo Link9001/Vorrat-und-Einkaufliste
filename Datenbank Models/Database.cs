@@ -1,7 +1,7 @@
 ﻿using Database_Models.DBModels.RecipeModels;
+using Database_Models.DBModels.StockModels;
 using System;
 using System.IO;
-using Database_Models.DBModels.StockModels;
 
 namespace Database_Models;
 
@@ -21,8 +21,8 @@ internal class Database : IDisposable
             Directory.CreateDirectory(SaveDirectoryInfo.FullName);
         }
 
-        StockFolder = new(SaveDirectoryInfo.FullName);
-        RecipeFolder = new(SaveDirectoryInfo.FullName);
+        StockFolder = new StockFolder(SaveDirectoryInfo.FullName);
+        RecipeFolder = new RecipeFolder(SaveDirectoryInfo.FullName);
     }
 
     /// <inheritdoc/>

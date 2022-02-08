@@ -1,7 +1,7 @@
 ﻿using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
-using RezepteSammelung.ViewModel.TabViewModel;
-using RezepteSammelung.ViewModel.Windows;
+using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
+using HouseholdmanagementTool.UI.ViewModel.Windows;
 using System.Windows;
 using System.Windows.Controls;
 using Unity;

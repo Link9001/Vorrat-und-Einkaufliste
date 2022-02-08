@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DatabaseAccess.Interface;
+namespace HouseholdmanagementTool.DatabaseAccess.Interface;
 internal interface IAccessData<T>
 {
     T Data { get; }

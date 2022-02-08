@@ -2,7 +2,6 @@
 using RezepteSammelung.Windows.SettingsWindow;
 using RezepteSammelung.Windows.StockWindow;
 using System.Windows;
-using RezepteSammelung.ViewModel.Windows;
 using Unity;
 
 namespace RezepteSammelung.Windows;

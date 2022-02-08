@@ -2,10 +2,10 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 using System.Windows.Media;
-using UtitlityFunctions.Atributte;
+using HouseholdmanagementTool.UtitlityFunctions;
 
 namespace Database_Models.DBModels;
-internal abstract class ListViewItem : INotifyPropertyChanged
+internal abstract record ListViewItem : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 

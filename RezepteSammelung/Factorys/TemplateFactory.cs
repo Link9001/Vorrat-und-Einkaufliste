@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Notenerfassungstool.Factorys;
+namespace HouseholdmanagementTool.UI.Factorys;
 
 /// <summary>
 /// Class that helps the creation of control and data templates by using delegates.

@@ -1,6 +1,6 @@
 ﻿using Database_Models.Interfaces;
-using RezepteSammelung.Interfaces;
-using RezepteSammelung.ViewModel.Windows;
+using HouseholdmanagementTool.UI.Interfaces;
+using HouseholdmanagementTool.UI.ViewModel.Windows;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -26,7 +26,7 @@ public partial class ModifyListWindow : Window
     }
 
     internal static void HandleModifyListFromUser<TOfListObejcts>(ListToModifyVieModel<TOfListObejcts> viewModel)
-        where TOfListObejcts : class, IName
+        where TOfListObejcts : class, IHaveName
     {
         var window = new ModifyListWindow(viewModel);
         _currentType = typeof(TOfListObejcts);
@@ -59,7 +59,7 @@ public partial class ModifyListWindow : Window
                 throw new NullReferenceException($"Could not create object from: '{_currentType.Name}'");
             }
 
-            ((IListToModifyViewModel)DataContext).ListToModify.Add((IName)newIName);
+            ((IListToModifyViewModel)DataContext).ListToModify.Add((IHaveName)newIName);
         }
         else
         {
@@ -77,7 +77,7 @@ public partial class ModifyListWindow : Window
     private void Delete(object sender, RoutedEventArgs e)
     {
         var dataConext = (IListToModifyViewModel)DataContext;
-        var subject = (IName)List.SelectedItem;
+        var subject = (IHaveName)List.SelectedItem;
         dataConext.ListToModify.Remove(subject);
     }
 

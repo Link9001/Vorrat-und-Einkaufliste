@@ -1,17 +1,16 @@
-﻿namespace UtitlityFunctions.ClassExtention
+﻿namespace HouseholdmanagementTool.UtitlityFunctions.ClassExtention;
+
+public static class BoolExtention
 {
-    public static class BoolExtention
+    public static bool Not(this bool @bool)
     {
-        public static bool Not(this bool @bool)
+        if (@bool)
         {
-            if (@bool)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 }

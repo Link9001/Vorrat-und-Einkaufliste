@@ -1,4 +1,4 @@
-﻿namespace UtitlityFunctions.InterfaceExtention;
+﻿namespace HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 
 public static class ICollectionExtention
 {
@@ -11,7 +11,7 @@ public static class ICollectionExtention
     public static void AddCollectionToThis<TFrom, TTo>(this ICollection<TFrom> collection, IEnumerable<TTo> collectionToAdd)
         where TTo : TFrom
     {
-        foreach (TTo item in collectionToAdd)
+        foreach (var item in collectionToAdd)
         {
             collection.Add(item);
         }

@@ -34,7 +34,7 @@ SOFTWARE. */
 #pragma warning disable 8618
 
 
-namespace UtitlityFunctions.Atributte
+namespace HouseholdmanagementTool.UtitlityFunctions
 {
     /// <summary>
     /// Indicates that the value of the marked element could be <c>null</c> sometimes,

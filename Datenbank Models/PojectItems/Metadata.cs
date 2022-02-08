@@ -1,4 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DatabaseAccess")]
-[assembly: InternalsVisibleTo("RezepteSammelung")]
+[assembly: InternalsVisibleTo("HouseholdmanagementTool.DatabaseAccess")]
+[assembly: InternalsVisibleTo("HouseholdmanagementTool.UI")]

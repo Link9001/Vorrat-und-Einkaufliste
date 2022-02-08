@@ -1,71 +1,85 @@
-﻿using System;
+﻿using Database_Models.Converters;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
+using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using Database_Models.Converters;
-using UtitlityFunctions.InterfaceExtention;
 
 namespace Database_Models.DBModels.RecipeModels;
 internal class RecipeFolder : IDisposable
 {
-    private DirectoryInfo saveDirectoryInfo;
+    private readonly DirectoryInfo _saveDirectoryInfo;
 
-    private ObservableCollection<Recipe> recipes = new();
-    private ObservableCollection<OvenSettings> ovenSettings = new();
+    private ObservableCollection<Recipe> _recipes = new();
+    private ObservableCollection<OvenSettings> _ovenSettings = new();
 
     public ObservableCollection<Recipe> Recipes
     {
-        get => recipes;
-        set => recipes = value;
+        get => _recipes;
+        set => _recipes = value;
     }
 
     public ObservableCollection<OvenSettings> OvenSettings
     {
-        get => ovenSettings;
-        set => ovenSettings = value;
+        get => _ovenSettings;
+        set => _ovenSettings = value;
     }
 
     internal RecipeFolder(string rootFolderPath)
     {
-        saveDirectoryInfo = new(Path.Combine(rootFolderPath, "Recipes"));
+        _saveDirectoryInfo = new(Path.Combine(rootFolderPath, "Recipes"));
 
-        if (!saveDirectoryInfo.Exists)
+        if (!_saveDirectoryInfo.Exists)
         {
-            Directory.CreateDirectory(saveDirectoryInfo.FullName);
+            Directory.CreateDirectory(_saveDirectoryInfo.FullName);
         }
 
-        JsonConverter.Deserialize(ref recipes, nameof(recipes), saveDirectoryInfo.FullName);
-        JsonConverter.Deserialize(ref ovenSettings, nameof(ovenSettings), saveDirectoryInfo.FullName);
+        JsonConverter.Deserialize(ref _recipes, nameof(_recipes), _saveDirectoryInfo.FullName);
+        JsonConverter.Deserialize(ref _ovenSettings, nameof(_ovenSettings), _saveDirectoryInfo.FullName);
 
-        if (ovenSettings.IsEmpty())
+        if (_ovenSettings.IsEmpty())
         {
             foreach (DefaultOvenSettings ovenSettings in Enum.GetValues<DefaultOvenSettings>())
             {
-                this.ovenSettings.Add(new(ovenSettings.ToString()));
+                this._ovenSettings.Add(new(ovenSettings.ToString()));
             }
         }
     }
 
     public void Dispose()
     {
-        JsonConverter.Serialize(recipes, nameof(recipes), saveDirectoryInfo.FullName);
-        JsonConverter.Serialize(ovenSettings, nameof(ovenSettings), saveDirectoryInfo.FullName);
+        JsonConverter.Serialize(_recipes, nameof(_recipes), _saveDirectoryInfo.FullName);
+        JsonConverter.Serialize(_ovenSettings, nameof(_ovenSettings), _saveDirectoryInfo.FullName);
     }
 }
 
+// ReSharper disable once UnusedMember.Global
 internal enum DefaultOvenSettings
 {
     Unbenutzt = 0,
+    // ReSharper disable once UnusedMember.Global
     Heissluft_4D = 1,
+    // ReSharper disable once UnusedMember.Global
     Ober_Unterhitze = 2,
+    // ReSharper disable once UnusedMember.Global
     Heissluft_eco = 3,
+    // ReSharper disable once UnusedMember.Global
     Ober_Unterhitze_eco = 4,
+    // ReSharper disable once UnusedMember.Global
     Umluftgrillen = 5,
+    // ReSharper disable once UnusedMember.Global
     Grill_gross = 6,
+    // ReSharper disable once UnusedMember.Global
     Grill_klein = 7,
+    // ReSharper disable once UnusedMember.Global
     Pizzastufe = 8,
+    // ReSharper disable once UnusedMember.Global
     Sanftgaren = 9,
-    Unterhitze = 10,
+    // ReSharper disable once UnusedMember.Global
+    Unterhitze = 10,// ReSharper disable once UnusedMember.Global
+    // ReSharper disable once UnusedMember.Global
     Warmhalten = 11,
+    // ReSharper disable once UnusedMember.Global
     Geschirr_vorwärmen = 12,
+    // ReSharper disable once UnusedMember.Global
     coolStartFunktion = 13,
 }
