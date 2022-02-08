@@ -1,11 +1,11 @@
 ﻿using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
-using DatabaseAccess.AccessData;
-using DatabaseAccess.Interface;
+using HouseholdmanagementTool.DatabaseAccess.AccessData;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
 using System.Collections.ObjectModel;
 using Unity;
 
-namespace DatabaseAccess;
+namespace HouseholdmanagementTool.DatabaseAccess;
 
 public static class Configuration
 {

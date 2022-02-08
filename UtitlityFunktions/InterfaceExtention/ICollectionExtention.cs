@@ -1,4 +1,4 @@
-﻿namespace UtitlityFunctions.InterfaceExtention;
+﻿namespace HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 
 public static class ICollectionExtention
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Reflection;
 
-namespace UtitlityFunctions.ClassExtention;
+namespace HouseholdmanagementTool.UtitlityFunctions.ClassExtention;
 
 public static class ObjectExtenstion
 {
@@ -86,11 +86,11 @@ public static class ObjectExtenstion
 
                         if (CanDirectlyCompare(collectionItemType))
                         {
-                            if (AreValuesEqual(collectionItem1, collectionItem2)) 
+                            if (AreValuesEqual(collectionItem1, collectionItem2))
                                 continue;
                             result = false;
                         }
-                        else if (!AreObjectsEqual(collectionItem1, collectionItem2, ignoreList))
+                        else if (!collectionItem1.AreObjectsEqual(collectionItem2, ignoreList))
                         {
                             result = false;
                         }
@@ -111,7 +111,7 @@ public static class ObjectExtenstion
                     return false;
                 }
 
-                if (AreObjectsEqual(valueFromObjectA, valueFormObjectB, ignoreList)) 
+                if (valueFromObjectA.AreObjectsEqual(valueFormObjectB, ignoreList))
                     continue;
 
                 result = false;

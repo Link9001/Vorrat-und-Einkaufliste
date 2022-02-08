@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace Database_Models.DBModels.StockModels;
+namespace Database_Models.DB.Stock;
 internal record Foodstuff : ListViewItem, IDataBaseModel
 {
     public static readonly Foodstuff EmptyFoodstuff = new(new Placement(string.Empty), string.Empty, string.Empty, 0, string.Empty);

@@ -1,19 +1,17 @@
 ﻿using Database_Models.Interfaces;
-using Notenerfassungstool.Factorys;
-using RezepteSammelung.UIHelpers;
+using HouseholdmanagementTool.Attributes.UserObjectCreation;
+using HouseholdmanagementTool.UI.Factorys;
+using HouseholdmanagementTool.UI.UIHelpers;
+using HouseholdmanagementTool.UtitlityFunctions.ClassExtention;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Database_Models.DBModels.StockModels;
-using UtitlityFunctions.Atributte;
-using UtitlityFunctions.ClassExtention;
-using UtitlityFunctions.InterfaceExtention;
 
 namespace RezepteSammelung.Windows;
 
@@ -77,7 +75,7 @@ public partial class NewItem : Window
 
         foreach (var property in GetAllPropertyInfosForField(_currentType))
         {
-            if (IsFieldFormListInDataContext(property) && property.PropertyType.IsAssignableTo(typeof(IName)))
+            if (IsFieldFormListInDataContext(property) && property.PropertyType.IsAssignableTo(typeof(IHaveName)))
             {
                 var comboBox = UIHelper.FindChild<ComboBox>(this, property.Name);
                 if (comboBox == null)
@@ -123,7 +121,7 @@ public partial class NewItem : Window
             }
         }
 
-        if (constructor == null) 
+        if (constructor == null)
         {
             throw new NullReferenceException(
                 $"could not find a suitable constructor for type: '{_currentType.Name}' with parameters: {string.Join(",\n", listOfParameters)}");
@@ -182,8 +180,11 @@ public partial class NewItem : Window
     private void AddPlaceholder_LostFocus(object sender, RoutedEventArgs e)
     {
         var target = (TextBox)sender;
-        if (!string.IsNullOrWhiteSpace(target.Text)) 
+        if (!string.IsNullOrWhiteSpace(target.Text))
+        {
             return;
+        }
+
         target.Text = target.Tag.ToString();
         target.Foreground = new SolidColorBrush(Colors.Gray);
     }
@@ -196,7 +197,7 @@ public partial class NewItem : Window
         Title = type.Name;
         for (int i = 0; i < allProperties.Count; i++)
         {
-            if (IsFieldFormListInDataContext(allProperties[i]) && allProperties[i].PropertyType.IsAssignableTo(typeof(IName)))
+            if (IsFieldFormListInDataContext(allProperties[i]) && allProperties[i].PropertyType.IsAssignableTo(typeof(IHaveName)))
             {
                 CreateComboBox(allProperties[i], i, existingObject);
             }
@@ -260,14 +261,18 @@ public partial class NewItem : Window
 
         MainGrid.Children.Add(dockPanel);
 
-        if (existingObject == null) 
+        if (existingObject == null)
+        {
             return;
+        }
 
         var prpertyInfo = DataContext.GetType().GetProperty($"{property.Name}s");
         if (prpertyInfo == null)
+        {
             throw new NullReferenceException($"Could not find Property '{property.Name}s' in the DataContext, but it needs to be in.");
-        
-        var listOfItems = (IList?) prpertyInfo.GetValue(DataContext);
+        }
+
+        var listOfItems = (IList?)prpertyInfo.GetValue(DataContext);
 
         var currentSelectedObject = property.GetValue(existingObject);
 

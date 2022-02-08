@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UtitlityFunctions.InterfaceExtention
+namespace HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention
 {
     public static class IEnumerableExtention
     {

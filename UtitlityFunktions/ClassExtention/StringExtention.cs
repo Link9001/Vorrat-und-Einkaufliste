@@ -1,4 +1,4 @@
-﻿namespace UtitlityFunctions.ClassExtention;
+﻿namespace HouseholdmanagementTool.UtitlityFunctions.ClassExtention;
 
 public static class StringExtention
 {

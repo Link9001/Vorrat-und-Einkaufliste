@@ -1,10 +1,10 @@
 ﻿using Database_Models;
 using Database_Models.DBModels.StockModels;
-using DatabaseAccess.Interface;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
 using System;
 using System.Collections.ObjectModel;
 
-namespace DatabaseAccess.AccessData;
+namespace HouseholdmanagementTool.DatabaseAccess.AccessData;
 
 internal class AccessPlacementData : IAccessData<ObservableCollection<Placement>>
 {

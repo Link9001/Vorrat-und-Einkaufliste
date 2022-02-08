@@ -1,13 +1,13 @@
 ﻿using Database_Models.DBModels.StockModels;
-using RezepteSammelung.ViewModel.TabViewModel;
-using RezepteSammelung.ViewModel.Windows;
+using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
+using HouseholdmanagementTool.UI.ViewModel.Windows;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Unity;
-using UtitlityFunctions.InterfaceExtention;
 
 namespace RezepteSammelung.Windows.StockWindow;
 

@@ -1,10 +1,10 @@
-﻿using RezepteSammelung.ViewModel.TabViewModel;
-using RezepteSammelung.ViewModel.Windows;
+﻿using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
+using HouseholdmanagementTool.UI.ViewModel.Windows;
 using Unity;
 
-namespace RezepteSammelung;
+namespace HouseholdmanagementTool.UI;
 
-public static class Configure
+public static class Configuration
 {
     public static IUnityContainer CreateUnityContainer()
     {

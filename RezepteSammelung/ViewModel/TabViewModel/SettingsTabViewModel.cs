@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Database_Models.DBModels.RecipeModels;
+﻿using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
-using DatabaseAccess.Interface;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
+using System.Collections.ObjectModel;
 
-namespace RezepteSammelung.ViewModel.TabViewModel;
+namespace HouseholdmanagementTool.UI.ViewModel.TabViewModel;
 
 internal class SettingsTabViewModel
 {

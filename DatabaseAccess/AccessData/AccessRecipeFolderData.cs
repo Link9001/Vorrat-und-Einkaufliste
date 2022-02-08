@@ -1,9 +1,9 @@
 ﻿using Database_Models;
 using Database_Models.DBModels.RecipeModels;
-using DatabaseAccess.Interface;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
 using System;
 
-namespace DatabaseAccess.AccessData;
+namespace HouseholdmanagementTool.DatabaseAccess.AccessData;
 
 internal class AccessRecipeFolderData : IAccessData<RecipeFolder>
 {

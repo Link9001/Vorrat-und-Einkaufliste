@@ -1,7 +1,7 @@
-﻿using Database_Models.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Database_Models.Interfaces;
 
-namespace Database_Models.DBModels.RecipeModels;
+namespace Database_Models.DB.Recipe;
 
 public record OvenSettings(string Name) : IDataBaseModel, IHaveName
 {

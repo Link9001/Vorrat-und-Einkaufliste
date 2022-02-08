@@ -1,8 +1,10 @@
 ﻿using Database_Models;
-using DatabaseAccess;
+using HouseholdmanagementTool.DatabaseAccess;
+using HouseholdmanagementTool.UI;
 using RezepteSammelung.Windows;
 using System.Windows;
 using Unity;
+using Configuration = HouseholdmanagementTool.UI.Configuration;
 
 namespace RezepteSammelung;
 
@@ -14,7 +16,7 @@ public partial class App : Application
     private Database? _db;
     private void AppStartup(object sender, StartupEventArgs e)
     {
-        var container = Configure.CreateUnityContainer();
+        var container = Configuration.CreateUnityContainer();
         container.ConfigureDatabase()
             .ConfigureDataAccess()
             .ConfigureApp();

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace RezepteSammelung;
+namespace HouseholdmanagementTool.UI;
 
 public static class ColorCollection
 {

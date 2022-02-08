@@ -1,6 +1,6 @@
 ﻿namespace Database_Models.Interfaces;
 
-internal interface IName
+internal interface IHaveName
 {
     string Name { get; }
     string GetName();

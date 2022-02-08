@@ -1,4 +1,4 @@
-﻿namespace UtitlityFunctions.Atributte;
+﻿namespace HouseholdmanagementTool.Attributes.UserObjectCreation;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
 public class IgnoreForUserCreationAttribute : Attribute

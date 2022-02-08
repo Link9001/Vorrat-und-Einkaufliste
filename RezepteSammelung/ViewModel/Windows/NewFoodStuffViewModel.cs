@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using Database_Models.DBModels.StockModels;
-using DatabaseAccess.Interface;
+﻿using Database_Models.DBModels.StockModels;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
+using System.Collections.ObjectModel;
 
-namespace RezepteSammelung.ViewModel.Windows;
+namespace HouseholdmanagementTool.UI.ViewModel.Windows;
 
 internal class NewFoodStuffViewModel
 {

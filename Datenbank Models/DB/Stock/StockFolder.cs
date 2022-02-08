@@ -1,10 +1,10 @@
-﻿using Database_Models.Converters;
-using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using Database_Models.Converters;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 
-namespace Database_Models.DBModels.StockModels;
+namespace Database_Models.DB.Stock;
 internal class StockFolder : IDisposable
 {
     private readonly DirectoryInfo _saveDirectoryInfo;

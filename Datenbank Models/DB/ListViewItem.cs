@@ -4,22 +4,22 @@ using System.Text.Json.Serialization;
 using System.Windows.Media;
 using HouseholdmanagementTool.UtitlityFunctions;
 
-namespace Database_Models.DBModels;
+namespace Database_Models.DB;
 internal abstract record ListViewItem : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 
     [JsonIgnore]
-    private Brush status = new SolidColorBrush(Colors.Transparent);
+    private Brush _status = new SolidColorBrush(Colors.Transparent);
 
     [JsonIgnore]
     public Brush Status
     {
-        get => status;
+        get => _status;
         set
         {
-            status = value;
-            OnPropertyChanged(nameof(status));
+            _status = value;
+            OnPropertyChanged(nameof(_status));
         }
     }
 

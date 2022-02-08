@@ -1,11 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using Database_Models.DBModels.RecipeModels;
+using Database_Models.DBModels.StockModels;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using Database_Models.DBModels.RecipeModels;
-using Database_Models.DBModels.StockModels;
-using DatabaseAccess.Interface;
 
-namespace RezepteSammelung.ViewModel.TabViewModel;
+namespace HouseholdmanagementTool.UI.ViewModel.TabViewModel;
 
 internal class StockTabViewModel
 {
@@ -19,10 +19,10 @@ internal class StockTabViewModel
 
     public StockTabViewModel(IAccessData<StockFolder> stockFolder, IAccessData<RecipeFolder> resipeFolder)
     {
-        this.recipes = resipeFolder.Data.Recipes;
-        this.shoppingList = stockFolder.Data.ShoppingList;
+        recipes = resipeFolder.Data.Recipes;
+        shoppingList = stockFolder.Data.ShoppingList;
         ShoppingList = new(shoppingList);
-        this.stockList = stockFolder.Data.StockList;
+        stockList = stockFolder.Data.StockList;
         StockList = new(stockList);
         Placements = stockFolder.Data.Placements;
         stockList.CollectionChanged += OnStockChange;
@@ -40,7 +40,7 @@ internal class StockTabViewModel
         {
             foreach (var ingredient in recipe.Ingredients)
             {
-                ingredient.Status = this.stockList.Any(x => x.Name == ingredient.Name) ? ColorCollection.IsAvaiable : ColorCollection.IsNotAvaiable;
+                ingredient.Status = stockList.Any(x => x.Name == ingredient.Name) ? ColorCollection.IsAvaiable : ColorCollection.IsNotAvaiable;
             }
 
             recipe.Status = recipe.Ingredients.Any(x => x.Status == ColorCollection.IsNotAvaiable) ? ColorCollection.IsNotAvaiable : ColorCollection.IsAvaiable;

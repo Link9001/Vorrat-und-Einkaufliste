@@ -1,8 +1,10 @@
 ﻿using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
-using DatabaseAccess.Interface;
-using RezepteSammelung.ViewModel.TabViewModel;
-using RezepteSammelung.ViewModel.Windows;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
+using HouseholdmanagementTool.UI;
+using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
+using HouseholdmanagementTool.UI.ViewModel.Windows;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,7 +12,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Unity;
-using UtitlityFunctions.InterfaceExtention;
 
 namespace RezepteSammelung.Windows.RecipeWindow;
 
@@ -19,7 +20,7 @@ public partial class RecipeTab : UserControl
     private readonly IUnityContainer _container;
     internal RecipeTab(IUnityContainer container, RecipeTabViewModel viewModel)
     {
-        this._container = container;
+        _container = container;
         DataContext = viewModel;
         InitializeComponent();
         Ingredients.ItemsSource = new ObservableCollection<Ingredient>();
@@ -38,8 +39,8 @@ public partial class RecipeTab : UserControl
         {
             Recipe currentRecipe = (Recipe)Recipes.SelectedItem;
             currentRecipe.Duration = Duration.Text.Trim();
-            currentRecipe.Ingredients = (ObservableCollection<Ingredient>) Ingredients.ItemsSource;
-            currentRecipe.OvenSettings = (OvenSettings) OvenSettings.SelectionBoxItem;
+            currentRecipe.Ingredients = (ObservableCollection<Ingredient>)Ingredients.ItemsSource;
+            currentRecipe.OvenSettings = (OvenSettings)OvenSettings.SelectionBoxItem;
             currentRecipe.Preparation = Preparation.Text.Trim();
             currentRecipe.RecipeName = RecipeTitle.Text.Trim();
 

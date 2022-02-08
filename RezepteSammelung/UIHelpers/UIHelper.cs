@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace RezepteSammelung.UIHelpers
+namespace HouseholdmanagementTool.UI.UIHelpers
 {
     public static class UIHelper
     {
@@ -19,7 +19,7 @@ namespace RezepteSammelung.UIHelpers
             where T : DependencyObject
         {
             // Confirm parent and childName are valid. 
-            if (parent == null) 
+            if (parent == null)
                 throw new NullReferenceException("Parent is null");
 
             T? foundChild = null;
@@ -36,7 +36,7 @@ namespace RezepteSammelung.UIHelpers
                     foundChild = FindChild<T>(child, childName);
 
                     // If the child is found, break so we do not overwrite the found child. 
-                    if (foundChild != null) 
+                    if (foundChild != null)
                         break;
                 }
                 else if (!string.IsNullOrEmpty(childName))
