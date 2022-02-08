@@ -5,7 +5,7 @@ using System.Windows.Media;
 using UtitlityFunctions.Atributte;
 
 namespace Database_Models.DBModels;
-internal abstract class ListViewItem : INotifyPropertyChanged
+internal abstract record ListViewItem : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler? PropertyChanged;
 

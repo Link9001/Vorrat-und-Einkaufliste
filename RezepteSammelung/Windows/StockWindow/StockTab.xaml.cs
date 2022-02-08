@@ -108,7 +108,7 @@ public partial class StockTab : UserControl
             return;
         }
         StockTabViewModel viewModel = (StockTabViewModel)DataContext;
-        viewModel.stockList.AddCollectionToThis(viewModel.shoppingList);
+        viewModel.stockList.AddCollectionToThis(viewModel.shoppingList.Select(x => x.SetDate()));
         viewModel.shoppingList.Clear();
         Search();
     }
@@ -126,11 +126,11 @@ public partial class StockTab : UserControl
         var dataContext = _container.Resolve<NewFoodStuffViewModel>();
 
         var newFoodStuff = NewItem.HandelNewItem(foodstuff, dataContext);
-        foodstuff.Placement = newFoodStuff.Placement;
         foodstuff.Date = newFoodStuff.Date;
         foodstuff.Name = newFoodStuff.Name;
-        foodstuff.Quantitiespesification = newFoodStuff.Quantitiespesification;
+        foodstuff.Placement = newFoodStuff.Placement;
         foodstuff.Quantity = newFoodStuff.Quantity;
+        foodstuff.Quantitiespesification = newFoodStuff.Quantitiespesification;
     }
 
     private void CountUp(object sender, RoutedEventArgs e)

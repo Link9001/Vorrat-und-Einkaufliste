@@ -4,11 +4,13 @@ using RezepteSammelung.UIHelpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Database_Models.DBModels.StockModels;
 using UtitlityFunctions.Atributte;
 using UtitlityFunctions.ClassExtention;
 using UtitlityFunctions.InterfaceExtention;
@@ -56,18 +58,17 @@ public partial class NewItem : Window
     internal static T HandelNewItem<T>(T item, object dataContext)
         where T : IDataBaseModel
     {
-        _toReturn = null;
-        var newItem = new NewItem(typeof(T), dataContext)
+        var newItem = new NewItem(typeof(T), dataContext, item)
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen
         };
 
         if ((bool)newItem.ShowDialog()!)
         {
-            return (T)_toReturn!;
+            return item;
         }
 
-        return item;
+        return (T)_toReturn!;
     }
 
     private void Save(object sender, RoutedEventArgs e)
@@ -110,15 +111,25 @@ public partial class NewItem : Window
             }
         }
 
-        var constructors = _currentType.GetConstructor(listOfParameters.Select(x => x.GetType()).ToArray());
+        var parameterList = listOfParameters.Select(x => x.GetType()).ToList();
+        ConstructorInfo? constructor = null;
 
-        if (constructors == null)
+        foreach (var constructorInfo in _currentType.GetConstructors())
+        {
+            var parameterType = constructorInfo.GetParameters().Select(x => x.ParameterType);
+            if (parameterType.SequenceEqualsIgnoreOrder(parameterList))
+            {
+                constructor = constructorInfo;
+            }
+        }
+
+        if (constructor == null) 
         {
             throw new NullReferenceException(
                 $"could not find a suitable constructor for type: '{_currentType.Name}' with parameters: {string.Join(",\n", listOfParameters)}");
         }
 
-        var newItem = constructors.Invoke(listOfParameters.ToArray());
+        var newItem = constructor.Invoke(listOfParameters.ToArray());
 
         if (newItem == null)
         {
@@ -163,19 +174,18 @@ public partial class NewItem : Window
 
     private void RemovePlaceholder_GotFocus(object sender, RoutedEventArgs e)
     {
-        TextBox target = (TextBox)sender;
+        var target = (TextBox)sender;
         target.Text = "";
         target.Foreground = new SolidColorBrush(Colors.Black);
     }
 
     private void AddPlaceholder_LostFocus(object sender, RoutedEventArgs e)
     {
-        TextBox target = (TextBox)sender;
-        if (string.IsNullOrWhiteSpace(target.Text))
-        {
-            target.Text = target.Tag.ToString();
-            target.Foreground = new SolidColorBrush(Colors.Gray);
-        }
+        var target = (TextBox)sender;
+        if (!string.IsNullOrWhiteSpace(target.Text)) 
+            return;
+        target.Text = target.Tag.ToString();
+        target.Foreground = new SolidColorBrush(Colors.Gray);
     }
 
     private void CreateView(Type type, object? existingObject)
@@ -188,7 +198,7 @@ public partial class NewItem : Window
         {
             if (IsFieldFormListInDataContext(allProperties[i]) && allProperties[i].PropertyType.IsAssignableTo(typeof(IName)))
             {
-                CreateComboBox(allProperties[i], i);
+                CreateComboBox(allProperties[i], i, existingObject);
             }
             else if (allProperties[i].PropertyType == typeof(string) || allProperties[i].PropertyType.IsNumber())
             {
@@ -200,9 +210,9 @@ public partial class NewItem : Window
 
     private void CreateField(PropertyInfo property, int rowLine, object? existingObject)
     {
-        Label label = CreateLabel(property.Name);
+        var label = CreateLabel(property.Name);
 
-        TextBox textBox = new TextBox
+        var textBox = new TextBox
         {
             Name = property.Name,
             FontSize = 15,
@@ -210,15 +220,16 @@ public partial class NewItem : Window
             Width = double.NaN,
             Height = double.NaN
         };
+
         if (existingObject != null)
         {
             textBox.Tag = property.GetValue(existingObject);
-            textBox.Text = property.GetValue(existingObject) as string;
+            textBox.Text = property.GetValue(existingObject)?.ToString();
             textBox.GotFocus += RemovePlaceholder_GotFocus;
             textBox.LostFocus += AddPlaceholder_LostFocus;
         }
 
-        DockPanel dockPanel = CreateDockPanel();
+        var dockPanel = CreateDockPanel();
         dockPanel.Children.Add(label);
         dockPanel.Children.Add(textBox);
         Grid.SetRow(dockPanel, rowLine);
@@ -226,11 +237,11 @@ public partial class NewItem : Window
         MainGrid.Children.Add(dockPanel);
     }
 
-    private void CreateComboBox(PropertyInfo property, int rowLine)
+    private void CreateComboBox(PropertyInfo property, int rowLine, object? existingObject)
     {
-        Label label = CreateLabel(property.Name);
+        var label = CreateLabel(property.Name);
 
-        ComboBox comboBox = new ComboBox
+        var comboBox = new ComboBox
         {
             Name = property.Name,
             FontSize = 15,
@@ -239,20 +250,33 @@ public partial class NewItem : Window
             Height = double.NaN
         };
         comboBox.SetBinding(ItemsControl.ItemsSourceProperty, $"{property.Name}s");
-        comboBox.ItemTemplate = TemplateFactory.CreateDataTemplate(() => { return CreateDataTemplate(); });
+        comboBox.ItemTemplate = TemplateFactory.CreateDataTemplate(CreateDataTemplate);
         label.Target = comboBox;
 
-        DockPanel dockPanel = CreateDockPanel();
+        var dockPanel = CreateDockPanel();
         dockPanel.Children.Add(label);
         dockPanel.Children.Add(comboBox);
         Grid.SetRow(dockPanel, rowLine);
 
         MainGrid.Children.Add(dockPanel);
+
+        if (existingObject == null) 
+            return;
+
+        var prpertyInfo = DataContext.GetType().GetProperty($"{property.Name}s");
+        if (prpertyInfo == null)
+            throw new NullReferenceException($"Could not find Property '{property.Name}s' in the DataContext, but it needs to be in.");
+        
+        var listOfItems = (IList?) prpertyInfo.GetValue(DataContext);
+
+        var currentSelectedObject = property.GetValue(existingObject);
+
+        comboBox.SelectedIndex = listOfItems!.IndexOf(currentSelectedObject);
     }
 
-    private Label CreateLabel(string propertyName)
+    private static Label CreateLabel(string propertyName)
     {
-        Label label = new Label
+        var label = new Label
         {
             FontSize = 15,
             Content = $"{propertyName}: "
@@ -262,7 +286,7 @@ public partial class NewItem : Window
 
     private DockPanel CreateDockPanel()
     {
-        DockPanel dockPanel = new DockPanel
+        var dockPanel = new DockPanel
         {
             Margin = new Thickness(10, 10, 10, 5),
             Width = double.NaN,
@@ -274,8 +298,8 @@ public partial class NewItem : Window
     }
     private object CreateDataTemplate()
     {
-        Label label = new();
-        label.SetBinding(Label.ContentProperty, "Name");
+        var label = new Label();
+        label.SetBinding(ContentProperty, "Name");
 
         return label;
     }
@@ -297,7 +321,7 @@ public partial class NewItem : Window
 
     private void AddRowLines(int lines)
     {
-        for (int i = 0; i < lines; i++)
+        for (var i = 0; i < lines; i++)
         {
             MainGrid.RowDefinitions.Add(new RowDefinition());
         }
@@ -305,7 +329,7 @@ public partial class NewItem : Window
 
     private void AddButtons(int indexOfLastRow)
     {
-        Button cancelButton = new Button
+        var cancelButton = new Button
         {
             Content = "Cancel",
             VerticalAlignment = VerticalAlignment.Center,
@@ -315,7 +339,7 @@ public partial class NewItem : Window
         cancelButton.Click += Cancel;
         Grid.SetColumn(cancelButton, 0);
 
-        Button saveButton = new Button
+        var saveButton = new Button
         {
             Content = "Save",
             VerticalAlignment = VerticalAlignment.Center,

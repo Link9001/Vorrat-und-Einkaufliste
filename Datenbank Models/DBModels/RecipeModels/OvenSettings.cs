@@ -3,15 +3,10 @@ using System.Collections.Generic;
 
 namespace Database_Models.DBModels.RecipeModels;
 
-public class OvenSettings : IDataBaseModel, IName
+public record OvenSettings(string Name) : IDataBaseModel, IName
 {
     public static readonly OvenSettings EmptyOvenSettings = new(string.Empty);
-    public string Name { get; set; }
-
-    public OvenSettings(string name)
-    {
-        Name = name;
-    }
+    public string Name { get; set; } = Name;
 
     public List<string> Validate()
     {

@@ -4,22 +4,13 @@ using System.Collections.ObjectModel;
 
 namespace Database_Models.DBModels.RecipeModels;
 
-internal class Recipe : ListViewItem, IDataBaseModel
+internal record Recipe(ObservableCollection<Ingredient> Ingredients, OvenSettings OvenSettings, string RecipeName, string Duration, string Preparation) : ListViewItem, IDataBaseModel
 {
-    public ObservableCollection<Ingredient> Ingredients { get; set; }
-    public string RecipeName { get; set; }
-    public OvenSettings OvenSettings { get; set; }
-    public string Duration { get; set; }
-    public string Preparation { get; set; }
-
-    public Recipe(ObservableCollection<Ingredient> ingredients, OvenSettings ovenSettings, string resipeName, string duration, string preparation)
-    {
-        RecipeName = resipeName;
-        OvenSettings = ovenSettings;
-        Ingredients = ingredients;
-        Duration = duration;
-        Preparation = preparation;
-    }
+    public ObservableCollection<Ingredient> Ingredients { get; set; } = Ingredients;
+    public string RecipeName { get; set; } = RecipeName;
+    public OvenSettings OvenSettings { get; set; } = OvenSettings;
+    public string Duration { get; set; } = Duration;
+    public string Preparation { get; set; } = Preparation;
 
     public List<string> Validate()
     {

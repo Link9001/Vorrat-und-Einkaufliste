@@ -3,17 +3,11 @@ using System.Collections.Generic;
 
 namespace Database_Models.DBModels.RecipeModels;
 
-internal class Ingredient : ListViewItem, IDataBaseModel
+internal record Ingredient(string Name, string Quantity) : ListViewItem, IDataBaseModel
 {
     public static readonly Ingredient EmptyIngredient = new(string.Empty, string.Empty);
-    public string Name { get; set; }
-    public string Quantity { get; set; }
-
-    public Ingredient(string name, string quantity)
-    {
-        Name = name;
-        Quantity = quantity;
-    }
+    public string Name { get; set; } = Name;
+    public string Quantity { get; set; } = Quantity;
 
     public List<string> Validate()
     {
