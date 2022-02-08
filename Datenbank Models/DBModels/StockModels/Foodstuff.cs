@@ -16,7 +16,7 @@ internal record Foodstuff : ListViewItem, IDataBaseModel
     private double _quantity;
     private string _quantitiespesification;
 
-    [IgnoreForCreationOfObject(true)]
+    [IgnoreForUserCreation(true)]
     public string Date
     {
         get => _date;

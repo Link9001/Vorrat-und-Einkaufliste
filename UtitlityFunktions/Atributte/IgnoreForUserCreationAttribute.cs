@@ -1,9 +1,9 @@
 ﻿namespace UtitlityFunctions.Atributte;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-public class IgnoreForCreationOfObjectAttribute : Attribute
+public class IgnoreForUserCreationAttribute : Attribute
 {
-    public IgnoreForCreationOfObjectAttribute(bool skip)
+    public IgnoreForUserCreationAttribute(bool skip)
     {
         Skip = skip;
     }

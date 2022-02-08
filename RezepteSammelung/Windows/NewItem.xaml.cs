@@ -312,8 +312,8 @@ public partial class NewItem : Window
                                    propertyInfo.PropertyType != typeof(string) &&
                                    propertyInfo.PropertyType.IsNumber().Not() &&
                                    propertyInfo.PropertyType.IsAssignableTo(typeof(IDataBaseModel)).Not());
-        var skipFromAttributte = listOfPropertys.Where(propertyInfo => propertyInfo.GetCustomAttribute<IgnoreForCreationOfObjectAttribute>() != null &&
-                                   propertyInfo.GetCustomAttribute<IgnoreForCreationOfObjectAttribute>()!.Skip);
+        var skipFromAttributte = listOfPropertys.Where(propertyInfo => propertyInfo.GetCustomAttribute<IgnoreForUserCreationAttribute>() != null &&
+                                   propertyInfo.GetCustomAttribute<IgnoreForUserCreationAttribute>()!.Skip);
 
         return listOfPropertys.Except(skips).Except(skipFromAttributte);
 

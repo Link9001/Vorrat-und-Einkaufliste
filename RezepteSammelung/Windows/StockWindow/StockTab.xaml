@@ -21,7 +21,7 @@
             <TextBox x:Name="SearchValueFoodStuff" KeyUp="SearchBar"/>
         </DockPanel>
 
-        <Label Content="Lager" Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0"/>
+        <Label Content="Lager" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0"/>
         <ListView x:Name="StockList" Grid.Row="1" Grid.Column="0" Margin="5" Grid.RowSpan="2" ItemsSource="{Binding StockList}" LostFocus="ListViewLostFocus">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -40,7 +40,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Label Content="Einkaufsliste" Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0"/>
+        <Label Content="Einkaufsliste" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0"/>
         <ListView x:Name="ShoppingList" Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding ShoppingList}" LostFocus="ListViewLostFocus">
             <ListView.ItemTemplate>
                 <DataTemplate>
