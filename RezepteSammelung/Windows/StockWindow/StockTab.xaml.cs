@@ -1,20 +1,21 @@
-﻿using Database_Models.DBModels.StockModels;
-using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
-using HouseholdmanagementTool.UI.ViewModel.Windows;
-using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Database_Models.DBModels.StockModels;
+using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
+using HouseholdmanagementTool.UI.ViewModel.Windows;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 using Unity;
 
-namespace RezepteSammelung.Windows.StockWindow;
+namespace HouseholdmanagementTool.UI.Windows.StockWindow;
 
 public partial class StockTab : UserControl
 {
     private readonly IUnityContainer _container;
     private ListView? _lastFocusedListView;
+    private object? _lastSelectedObject;
     internal StockTab(IUnityContainer container, StockTabViewModel viewModel)
     {
         _container = container;
@@ -87,15 +88,15 @@ public partial class StockTab : UserControl
 
     private void DeleteFoodStuffElement(object sender, RoutedEventArgs e)
     {
-        StockTabViewModel viewModel = (StockTabViewModel)DataContext;
-        if (_lastFocusedListView is not null && _lastFocusedListView.Name == "StockList")
+        var viewModel = (StockTabViewModel)DataContext;
+        var toDeleteFoodstuff = _lastSelectedObject as Foodstuff ?? Foodstuff.EmptyFoodstuff;
+
+        if (_lastFocusedListView is not null && _lastSelectedObject is not null)
         {
-            Foodstuff toDeleteFoodstuff = (Foodstuff)StockList.SelectedItem;
             viewModel.stockList.Remove(toDeleteFoodstuff);
         }
         else
         {
-            Foodstuff toDeleteFoodstuff = (Foodstuff)ShoppingList.SelectedItem;
             viewModel.shoppingList.Remove(toDeleteFoodstuff);
         }
         Search();
@@ -116,6 +117,8 @@ public partial class StockTab : UserControl
 
     private void ListViewLostFocus(object sender, RoutedEventArgs e)
     {
+        _lastSelectedObject = ((ListView) sender).SelectedItem;
+        ((ListView) sender).SelectedIndex = -1;
         _lastFocusedListView = (ListView)sender;
     }
 

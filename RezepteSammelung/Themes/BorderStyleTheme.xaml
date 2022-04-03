@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="Border"
+           x:Key="BaseWindowBorderTheme">
+        <Setter Property="Background" Value="#1a41b7"/>
+        <Setter Property="CornerRadius" Value="15"/>
+    </Style>
+    
+</ResourceDictionary>

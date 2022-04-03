@@ -1,10 +1,11 @@
-﻿<UserControl x:Class="RezepteSammelung.Windows.StockWindow.StockTab"
+﻿<UserControl x:Class="HouseholdmanagementTool.UI.Windows.StockWindow.StockTab"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Style="{StaticResource BaseUserControlTheme}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"/>
@@ -12,17 +13,18 @@
             <RowDefinition Height="15*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="55*"/>
-            <ColumnDefinition Width="45*"/>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="76*"/>
+            <ColumnDefinition Width="71*"/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center" LastChildFill="True" Margin="0,0,0,10">
+        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Top" LastChildFill="True" Margin="0,8,0,0">
             <TextBlock Text="Suchbegriff:" Margin="0,0,20,0" FontSize="14"/>
-            <TextBox x:Name="SearchValueFoodStuff" KeyUp="SearchBar"/>
+            <TextBox Name="SearchValueFoodStuff" KeyUp="SearchBar" Style="{StaticResource TextBoxTheme}"/>
         </DockPanel>
 
-        <Label Content="Lager" Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0"/>
-        <ListView x:Name="StockList" Grid.Row="1" Grid.Column="0" Margin="5" Grid.RowSpan="2" ItemsSource="{Binding StockList}" LostFocus="ListViewLostFocus">
+        <Label Content="Lager" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Padding="0" Margin="148,0,0,0"/>
+        <ListView Name="StockList" Grid.Row="1" Grid.Column="0" Margin="5,5,4,5" Grid.RowSpan="2" ItemsSource="{Binding StockList}" LostFocus="ListViewLostFocus" Grid.ColumnSpan="2" Style="{StaticResource ListViewTheme}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,5" HorizontalAlignment="Stretch" VerticalAlignment="Center">
@@ -32,16 +34,16 @@
                         <TextBlock Text="{Binding Quantity}" Margin="0,0,5,0" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Quantitiespesification}" Margin="0,0,20,0" VerticalAlignment="Center"/>
                         <StackPanel Margin="0,0,20,0">
-                            <Button VerticalAlignment="Top" FontFamily="Marlett" Content="5" Click="CountUp"/>
-                            <Button VerticalAlignment="Bottom" FontFamily="Marlett" Content="6" Click="CountDown"/>
+                            <Button VerticalAlignment="Top" FontFamily="Marlett" Content="5" Click="CountUp" Style="{StaticResource DefaultButtonStyle}"/>
+                            <Button VerticalAlignment="Bottom" FontFamily="Marlett" Content="6" Click="CountDown" Style="{StaticResource DefaultButtonStyle}"/>
                         </StackPanel>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <Label Content="Einkaufsliste" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0"/>
-        <ListView x:Name="ShoppingList" Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding ShoppingList}" LostFocus="ListViewLostFocus">
+        <Label Content="Einkaufsliste" Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="0" Margin="0,28,0,0"/>
+        <ListView Name="ShoppingList" Grid.Row="1" Grid.Column="2" Margin="6,5,5,5" ItemsSource="{Binding ShoppingList}" LostFocus="ListViewLostFocus" Style="{StaticResource ListViewTheme}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Stretch">
@@ -51,17 +53,17 @@
                         <TextBlock Text="{Binding Quantity}" Margin="0,0,5,0" VerticalAlignment="Center"/>
                         <TextBlock Text="{Binding Quantitiespesification}" Margin="0,0,20,0" VerticalAlignment="Center"/>
                         <StackPanel Margin="0,0,20,0">
-                            <Button VerticalAlignment="Top" FontFamily="Marlett" Content="5" Click="CountUp"/>
-                            <Button VerticalAlignment="Bottom" FontFamily="Marlett" Content="6" Click="CountDown"/>
+                            <Button VerticalAlignment="Top" FontFamily="Marlett" Content="5" Click="CountUp" Style="{StaticResource DefaultButtonStyle}"/>
+                            <Button VerticalAlignment="Bottom" FontFamily="Marlett" Content="6" Click="CountDown" Style="{StaticResource DefaultButtonStyle}"/>
                         </StackPanel>
-                        <Button Content="Gekauft" Click="Byed" Margin="0,0,20,0" VerticalAlignment="Center"/>
-                        <Button Content="Bearbeiten" HorizontalAlignment="Right" Click="EditFoodstuff" VerticalAlignment="Center"/>
+                        <Button Content="Gekauft" Click="Byed" Margin="0,0,20,0" VerticalAlignment="Center" Style="{StaticResource DefaultButtonStyle}"/>
+                        <Button Content="Bearbeiten" HorizontalAlignment="Right" Click="EditFoodstuff" VerticalAlignment="Center" Style="{StaticResource DefaultButtonStyle}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
 
-        <Grid Row="2" Column="1">
+        <Grid Row="2" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -70,9 +72,9 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Hinzufügen" Grid.Row="0" Grid.Column="1" Click="NewFoodStuff" FontSize="15" Margin="5" VerticalAlignment="Center"/>
-            <Button Content="Löschen" Grid.Row="0" Grid.Column="0" Click="DeleteFoodStuffElement" Margin="5" FontSize="15" VerticalAlignment="Center"/>
-            <Button Content="Übernahme" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Click="MoveShoppingListToStock" Margin="5" FontSize="15" VerticalAlignment="Center"/>
+            <Button Content="Hinzufügen" Grid.Row="0" Grid.Column="1" Click="NewFoodStuff" FontSize="15" Margin="5" VerticalAlignment="Center" Style="{StaticResource DefaultButtonStyle}"/>
+            <Button Content="Löschen" Grid.Row="0" Grid.Column="0" Click="DeleteFoodStuffElement" Margin="5" FontSize="15" VerticalAlignment="Center" Style="{StaticResource DefaultButtonStyle}"/>
+            <Button Content="Alles Gekauft" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Click="MoveShoppingListToStock" Margin="5" FontSize="15" VerticalAlignment="Center" Style="{StaticResource DefaultButtonStyle}"/>
         </Grid>
     </Grid>
 </UserControl>

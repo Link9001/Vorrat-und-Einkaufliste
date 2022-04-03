@@ -1,10 +1,4 @@
-﻿using Database_Models.Interfaces;
-using HouseholdmanagementTool.Attributes.UserObjectCreation;
-using HouseholdmanagementTool.UI.Factorys;
-using HouseholdmanagementTool.UI.UIHelpers;
-using HouseholdmanagementTool.UtitlityFunctions.ClassExtention;
-using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +6,14 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Database_Models.Interfaces;
+using HouseholdmanagementTool.Attributes.UserObjectCreation;
+using HouseholdmanagementTool.UI.Factorys;
+using HouseholdmanagementTool.UI.UIHelpers;
+using HouseholdmanagementTool.UtitlityFunctions.ClassExtention;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 
-namespace RezepteSammelung.Windows;
+namespace HouseholdmanagementTool.UI.Windows;
 
 /// <summary>
 /// Interaktionslogik für NewItem.xaml
@@ -22,11 +22,14 @@ public partial class NewItem : Window
 {
     private static IDataBaseModel? _toReturn;
     private readonly Type _currentType;
-    private NewItem(Type type, object dataContext, object? existingObject = null)
+    private NewItem(Type type, object? dataContext, object? existingObject = null)
     {
         _currentType = type;
         InitializeComponent();
-        DataContext = dataContext;
+        if (dataContext is not null)
+        {
+            DataContext = dataContext;
+        }
         CreateView(type, existingObject);
     }
 
@@ -36,8 +39,8 @@ public partial class NewItem : Window
     /// <typeparam name="T"></typeparam>
     /// <param name="dataContext">List will be Binded by the name of the Peroperty plus an 's'</param>
     /// <returns></returns>
-    internal static T? HandelNewItem<T>(object dataContext)
-        where T : IDataBaseModel
+    internal static T? HandelNewItem<T>(object? dataContext = null)
+        where T : IDataBaseModel, IEquatable<T>
     {
         _toReturn = null;
         var newItem = new NewItem(typeof(T), dataContext)
@@ -53,8 +56,8 @@ public partial class NewItem : Window
         return (T?)_toReturn;
     }
 
-    internal static T HandelNewItem<T>(T item, object dataContext)
-        where T : IDataBaseModel
+    internal static T HandelNewItem<T>(T item, object? dataContext = null)
+        where T : IDataBaseModel, IEquatable<T>
     {
         var newItem = new NewItem(typeof(T), dataContext, item)
         {
@@ -62,6 +65,11 @@ public partial class NewItem : Window
         };
 
         if ((bool)newItem.ShowDialog()!)
+        {
+            return item;
+        }
+
+        if (_toReturn is null)
         {
             return item;
         }
@@ -164,10 +172,9 @@ public partial class NewItem : Window
         DialogResult = false;
     }
 
-
     private void Cancel(object sender, RoutedEventArgs e)
     {
-        DialogResult = true;
+        DialogResult = false;
     }
 
     private void RemovePlaceholder_GotFocus(object sender, RoutedEventArgs e)

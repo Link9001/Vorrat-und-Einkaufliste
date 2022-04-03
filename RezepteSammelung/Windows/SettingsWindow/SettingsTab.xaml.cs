@@ -1,12 +1,12 @@
-﻿using Database_Models.DBModels.RecipeModels;
+﻿using System.Windows;
+using System.Windows.Controls;
+using Database_Models.DBModels.RecipeModels;
 using Database_Models.DBModels.StockModels;
 using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
 using HouseholdmanagementTool.UI.ViewModel.Windows;
-using System.Windows;
-using System.Windows.Controls;
 using Unity;
 
-namespace RezepteSammelung.Windows.SettingsWindow
+namespace HouseholdmanagementTool.UI.Windows.SettingsWindow
 {
     /// <summary>
     /// Interaktionslogik für SettingsTab.xaml

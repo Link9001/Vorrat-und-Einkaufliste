@@ -1,10 +1,11 @@
-﻿using RezepteSammelung.Windows.RecipeWindow;
-using RezepteSammelung.Windows.SettingsWindow;
-using RezepteSammelung.Windows.StockWindow;
+﻿using HouseholdmanagementTool.UI.Windows.RecipeWindow;
+using HouseholdmanagementTool.UI.Windows.SettingsWindow;
+using HouseholdmanagementTool.UI.Windows.StockWindow;
 using System.Windows;
+using System.Windows.Input;
 using Unity;
 
-namespace RezepteSammelung.Windows;
+namespace HouseholdmanagementTool.UI.Windows;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -17,8 +18,32 @@ public partial class MainWindow : Window
         this.container = container;
         InitializeComponent();
         Title = "Haushalt";
-        stock.Content = container.Resolve<StockTab>();
-        recipe.Content = container.Resolve<RecipeTab>();
-        settins.Content = container.Resolve<SettingsTab>();
+        Stock.Content = container.Resolve<StockTab>();
+        Recipe.Content = container.Resolve<RecipeTab>();
+        Settings.Content = container.Resolve<SettingsTab>();
+    }
+
+    private void OnMouseMove(object sender, MouseEventArgs e)
+    {
+        if (e.LeftButton is MouseButtonState.Pressed)
+        {
+            WindowState = WindowState.Normal;
+            DragMove();
+        }
+    }
+
+    private void OnCloseWindow(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void OnMaximiseWindow(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Maximized;
+    }
+
+    private void OnMinimiseWindow(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
     }
 }

@@ -1,19 +1,18 @@
-﻿using Database_Models.DBModels.RecipeModels;
-using Database_Models.DBModels.StockModels;
-using HouseholdmanagementTool.DatabaseAccess.Interface;
-using HouseholdmanagementTool.UI;
-using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
-using HouseholdmanagementTool.UI.ViewModel.Windows;
-using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Database_Models.DBModels.RecipeModels;
+using Database_Models.DBModels.StockModels;
+using HouseholdmanagementTool.DatabaseAccess.Interface;
+using HouseholdmanagementTool.UI.ViewModel.TabViewModel;
+using HouseholdmanagementTool.UI.ViewModel.Windows;
+using HouseholdmanagementTool.UtitlityFunctions.InterfaceExtention;
 using Unity;
 
-namespace RezepteSammelung.Windows.RecipeWindow;
+namespace HouseholdmanagementTool.UI.Windows.RecipeWindow;
 
 public partial class RecipeTab : UserControl
 {

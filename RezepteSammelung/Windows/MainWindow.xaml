@@ -1,15 +1,25 @@
-﻿<Window x:Class="RezepteSammelung.Windows.MainWindow"
+﻿<Window x:Class="HouseholdmanagementTool.UI.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="600" MinWidth="1050">
-    <Grid>
-        <TabControl>
-            <TabItem x:Name="stock" Header="Vorrat"/>
-            <TabItem x:Name="recipe" Header="Rezepte"/>
-            <TabItem x:Name="settins" Header="Settings"/>
-        </TabControl>
-    </Grid>
+        MinHeight="600" MinWidth="1050"
+        Style="{StaticResource WindowStyleTheme}"
+        MouseMove="OnMouseMove">
+    <Border Style="{StaticResource BaseWindowBorderTheme}">
+        <Grid>
+            <StackPanel ZIndex="1000" VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Style="{StaticResource MinimizeButton}" Click="OnMinimiseWindow"/>
+                <Button Style="{StaticResource MaximiseButton}" Click="OnMaximiseWindow"/>
+                <Button Style="{StaticResource CloseButton}" Click="OnCloseWindow"/>
+            </StackPanel>
+            <TabControl Style="{StaticResource TabControlTheme}">
+                <TabItem Name="Stock" Header="Vorrat" Style="{StaticResource BaseTabItemTheme}"/>
+                <TabItem Name="Recipe" Header="Rezepte" Style="{StaticResource BaseTabItemTheme}"/>
+                <TabItem Name="Settings" Header="Settings" Style="{StaticResource BaseTabItemTheme}"/>
+            </TabControl>
+        </Grid>
+    </Border>
+
 </Window>

@@ -1,12 +1,10 @@
-﻿using Database_Models;
+﻿using System.Windows;
+using Database_Models;
 using HouseholdmanagementTool.DatabaseAccess;
-using HouseholdmanagementTool.UI;
-using RezepteSammelung.Windows;
-using System.Windows;
+using HouseholdmanagementTool.UI.Windows;
 using Unity;
-using Configuration = HouseholdmanagementTool.UI.Configuration;
 
-namespace RezepteSammelung;
+namespace HouseholdmanagementTool.UI;
 
 /// <summary>
 /// Interaction logic for App.xaml

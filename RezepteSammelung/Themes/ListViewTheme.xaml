@@ -1,0 +1,23 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ListViewItemTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="ListView"
+           x:Key="ListViewTheme">
+
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ListViewItemTheme}"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListView">
+                    <Border CornerRadius="10" Background="{Binding Path=Background, RelativeSource={RelativeSource FindAncestor, AncestorType=Control, AncestorLevel=2}}">
+                        <ItemsPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+</ResourceDictionary>

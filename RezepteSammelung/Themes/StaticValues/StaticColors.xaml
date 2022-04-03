@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="BaseBackgroundColor" R="26" B="183" G="65"/>
+    <Color x:Key="BackgroundToAddOnChecked" R="68" G="68" B="68"/>
+    <SolidColorBrush x:Key="BaseBackgroundSolidColorBrush" Color="#1a41b7"/>
+    <SolidColorBrush x:Key="BackgroundOnSelectedSolidColorBrush" Color="#2f427d"/>
+    <Color x:Key="BackgroundOnSelectedColor" R="47" G="66" B="125"/>
+    
+</ResourceDictionary>
